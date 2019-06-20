@@ -153,14 +153,15 @@ void TIS_Camera::CameraInit()
 // 		AfxMessageBox("打开相机失败,是否已连接好相机或相机SN号有误");
 //
 // 	}
-    if (Grab1.isLive())
-    {
-        Grab1.stopLive();
-    }
+//    if (Grab1.isLive())
+//    {
+//        Grab1.stopLive();
+//    }
     Grab1.showDevicePage();                                             //显示相机设备
     Grab1.saveDeviceStateToFile("device.xml");
     Grab1.loadDeviceStateFromFile("device.xml",true);
-    Grab1.startLive();
+//    Grab1.startLive();
+    emit ini();
     //    //设置回调函数
 //    pListener1 = new Listener1();
 //    Grab1->addListener(pListener1,DShowLib::GrabberListener::eFRAMEREADY);//注册回调

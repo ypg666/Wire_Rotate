@@ -18,6 +18,7 @@ Password::Password(QWidget *parent) :
     ui->lineEdit->setEchoMode(QLineEdit::Password);//输入时显示数字，失去焦点时显示圆点
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(on_loginBtn_clicked()));
     connect(ui->pushButton_2, SIGNAL(clicked(bool)), this, SLOT(close()));
+    connect(&w4, SIGNAL(ini()), this, SLOT(finish()));
 }
 
 Password::~Password()
@@ -57,4 +58,13 @@ void Password::on_loginBtn_clicked()
         ui->lineEdit->clear();
         ui->lineEdit->setFocus();
     }
+}
+
+/*相机初始化传值 由于相机时序问题 改完相机设置后  主界面的相机并不会随之改变 故需要信号槽重新调用相机初始化
+但是由于密码类里又创建了个相机对象 此时初始化后 会有这个对象发送信号 而主窗口的相机对象直接的更新槽函数不会受到信号
+故再用一次信号与槽转接一下
+  */
+void Password::finish()
+{
+    emit fin();
 }

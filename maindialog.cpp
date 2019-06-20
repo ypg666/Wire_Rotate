@@ -1,4 +1,4 @@
-#include "maindialog.h"
+﻿#include "maindialog.h"
 #include "ui_maindialog.h"
 
 
@@ -15,6 +15,8 @@ MainDialog::MainDialog(QWidget *parent) :
     this->setObjectName("dialog");    //这句话一定要有，不然，整个界面上的控件背景都跟界面背景一样
     this->setStyleSheet("QDialog#dialog{border-image:url(2.jpg)}");
     //ui->pushButton->setStyleSheet(“border-image:url(me.png)”); 按钮添加背景图片
+    ui->pushButton->setText(QString("开始运行"));
+
     //利用painEvent显示，会卡顿
 //    ca =new CameraDisplay(20,this);
 //    ui->horizontalLayout->addWidget(ca);
@@ -52,11 +54,93 @@ MainDialog::MainDialog(QWidget *parent) :
     connect(ui->pushButton_9, SIGNAL(clicked(bool)), this, SLOT(grab()));
     connect(ui->pushButton_10, SIGNAL(clicked(bool)), this, SLOT(modbus()));
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerOut()));
+    connect(&w2, SIGNAL(fin()), this, SLOT(normal()));
 }
 
 MainDialog::~MainDialog()
 {
     delete ui;
+}
+
+void MainDialog::normal()
+{
+    cam.Camera(ui->widget);
+}
+void MainDialog::fun()
+{
+    if(ui->pushButton->text()==(QString("开始运行")))
+    {
+        ui->pushButton_3->setEnabled(false);
+        ui->pushButton_4->setEnabled(false);
+        ui->pushButton_6->setEnabled(false);
+        ui->pushButton_10->setEnabled(false);
+        ui->pushButton_7->setEnabled(false);
+        ui->pushButton_9->setEnabled(false);
+        ui->pushButton->setText(QString("停止检测"));
+        cam.Trigger(ui->widget);
+        this->update();
+    }
+    else if(ui->pushButton->text()==(QString("停止检测")))
+    {
+        ui->pushButton_3->setEnabled(true);
+        ui->pushButton_4->setEnabled(true);
+        ui->pushButton_6->setEnabled(true);
+        ui->pushButton_7->setEnabled(true);
+        ui->pushButton_9->setEnabled(true);
+        ui->pushButton_10->setEnabled(true);
+        ui->pushButton->setText(QString("开始运行"));
+        cam.Camera(ui->widget);
+        this->update();
+    }
+
+}
+void MainDialog::historyimage()
+{
+    w1.hisupdate();
+    w1.show();
+}
+void MainDialog::debug()
+{
+    w3.show();
+}
+void MainDialog::password()
+{
+    w2.setflag(0);
+    w2.show();
+}
+void MainDialog::password1()
+{
+    w2.setflag(1);
+    w2.show();
+}
+void MainDialog::grab()
+{
+//    QImage img;QString filename;QString path=image_path;
+//    QString str=QString::number(i);
+//    img = cam.GetMatImage();
+//    filename = filename.append(path + "90°-" + str +".jpg");
+//    img.save(filename, "JPG", 100);
+//    i++;
+    QString str1=p.readhis();
+    int num2 = str1.toInt();
+    num++; num2++;
+    str1=QString::number(num2);
+    p.sethis(str1);
+    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
+    ui->label_5->setText(num1);
+    ui->label_6->setText(str1);
+    this->update();
+}
+void MainDialog::onTimerOut()
+{
+  //获取系统当前时间
+  QTime time = QTime::currentTime();
+  //设置晶体管控件QLCDNumber上显示的内容
+  ui->lcdNumber_3->display(time.toString("hh:mm:ss"));
+}
+void MainDialog::modbus()
+{
+    w4.show();
 }
 
 //获取图片像素
@@ -109,56 +193,3 @@ MainDialog::~MainDialog()
 ////painter.drawText(20,40,QString("%1").arg(x) + "," + QString("%1").arg(y));
 //    update();
 //}
-
-void MainDialog::fun()
-{
-//    cam.Trigger(ui->widget);
-}
-void MainDialog::historyimage()
-{
-    w1.hisupdate();
-    w1.show();
-}
-void MainDialog::debug()
-{
-    w3.show();
-}
-void MainDialog::password()
-{
-    w2.setflag(0);
-    w2.show();
-}
-void MainDialog::password1()
-{
-    w2.setflag(1);
-    w2.show();
-}
-void MainDialog::grab()
-{
-//    QImage img;QString filename;QString path=image_path;
-//    QString str=QString::number(i);
-//    img = cam.GetMatImage();
-//    filename = filename.append(path + "90°-" + str +".jpg");
-//    img.save(filename, "JPG", 100);
-//    i++;
-    QString str1=p.readhis();
-    int num2 = str1.toInt();
-    num++; num2++;
-    str1=QString::number(num2);
-    p.sethis(str1);
-    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
-    ui->label_5->setText(num1);
-    ui->label_6->setText(str1);
-    this->update();
-}
-void MainDialog::onTimerOut()
-{
-  //获取系统当前时间
-  QTime time = QTime::currentTime();
-  //设置晶体管控件QLCDNumber上显示的内容
-  ui->lcdNumber_3->display(time.toString("hh:mm:ss"));
-}
-void MainDialog::modbus()
-{
-    w4.show();
-}

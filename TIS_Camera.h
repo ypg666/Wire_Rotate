@@ -5,7 +5,7 @@
 #include "Listener1.h"//回调头文件
 #include<opencv2\opencv.hpp>
 #include <QtGui>
-
+#include <QObject>
 
 #if !defined(AFX_TIS_CAMERA_H__9AE25ADE_A9E6_4DFD_A8E0_6181580BA1D4__INCLUDED_)
 #define AFX_TIS_CAMERA_H__9AE25ADE_A9E6_4DFD_A8E0_6181580BA1D4__INCLUDED_
@@ -19,13 +19,14 @@
 using namespace cv;
 using namespace DShowLib;
 
-class TIS_Camera  
+class TIS_Camera : public QObject
 {
+    Q_OBJECT
+
 public:
 	TIS_Camera();
 	 ~TIS_Camera();
 
-	 
 	 Listener1 *pListener1; //回调对象
 	
 	 //生成相机取图与接口对象
@@ -56,6 +57,8 @@ public:
 	* @return 转换后的 QImage 图像
 	*/
 
+signals:
+     void ini();
 private:
 
     Mat m_getmat;

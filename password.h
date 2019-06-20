@@ -15,6 +15,7 @@
 #include "TIS_Camera.h"
 
 
+
 namespace Ui {
 class Password;
 }
@@ -31,9 +32,11 @@ public:
     TIS_Camera w4;
     QString q;
     void setflag(int i);
-
+signals:
+    void fin();
 private slots:
     void on_loginBtn_clicked();
+    void finish();
 
 private:
     Ui::Password *ui;

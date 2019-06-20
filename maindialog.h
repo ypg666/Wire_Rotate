@@ -1,7 +1,7 @@
-#ifndef MAINDIALOG_H
+﻿#ifndef MAINDIALOG_H
 #define MAINDIALOG_H
 
-//#include "msvc_macro.h"
+#include "msvc_macro.h"
 #include "historyimage.h"
 #include "password.h"
 #include "cameradisplay.h"
@@ -12,6 +12,7 @@
 #include <QDialog>
 #include <QTimer>
 #include <QTime>
+#include <QStatusBar>
 
 #define image_path "C:/Users/Administrator/Desktop/1/"  //存放图片的路径
 namespace Ui {
@@ -33,6 +34,8 @@ public:
     DShowLib::Grabber *pGrabber;
     TIS_Camera cam;
     SysDate p;
+public slots:
+    void normal();
 private slots:
     void fun();
     void historyimage();

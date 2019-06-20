@@ -16,6 +16,12 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>修改密码</string>
      </property>
@@ -46,6 +52,12 @@
            <height>40</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>请输入新密码</string>
          </property>
@@ -64,6 +76,11 @@
            <width>16777215</width>
            <height>40</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
          </property>
         </widget>
        </item>
@@ -86,6 +103,12 @@
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QLabel" name="label_3">
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>再次输入密码</string>
          </property>
@@ -104,6 +127,11 @@
            <width>16777215</width>
            <height>40</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
          </property>
         </widget>
        </item>
@@ -138,6 +166,12 @@
        <height>50</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>确认修改</string>
      </property>
@@ -158,6 +192,12 @@
    </item>
    <item>
     <widget class="QLabel" name="label_4">
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>图片储存</string>
      </property>
@@ -174,6 +214,12 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>存储数量</string>
        </property>
@@ -192,6 +238,11 @@
          <width>16777215</width>
          <height>40</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
       </widget>
      </item>
@@ -226,6 +277,12 @@
          <height>50</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>确定</string>
        </property>
@@ -257,6 +314,12 @@
          <width>120</width>
          <height>50</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>返回</string>

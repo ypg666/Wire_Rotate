@@ -57,6 +57,12 @@
            <height>50</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="autoFillBackground">
           <bool>false</bool>
          </property>
@@ -79,6 +85,12 @@
            <height>50</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>调试设置</string>
          </property>
@@ -97,6 +109,12 @@
            <width>150</width>
            <height>50</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>12</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>系统设置</string>
@@ -117,6 +135,12 @@
            <height>50</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>相机设置</string>
          </property>
@@ -135,6 +159,12 @@
            <width>150</width>
            <height>50</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>12</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>通讯设置</string>
@@ -200,9 +230,15 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>120</width>
+         <width>140</width>
          <height>50</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>抓图</string>
@@ -219,9 +255,15 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>120</width>
+         <width>140</width>
          <height>50</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>历史图像</string>
@@ -238,9 +280,15 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>120</width>
+         <width>140</width>
          <height>50</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>退出</string>
@@ -262,6 +310,12 @@
      </item>
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>本次角度</string>
        </property>
@@ -285,6 +339,12 @@
      </item>
      <item>
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>上次角度</string>
        </property>
@@ -302,6 +362,12 @@
      </item>
      <item>
       <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>检测数量：</string>
        </property>
@@ -315,6 +381,11 @@
      </item>
      <item>
       <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -322,6 +393,12 @@
      </item>
      <item>
       <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>历史数量：</string>
        </property>
@@ -329,6 +406,11 @@
      </item>
      <item>
       <widget class="QLabel" name="label_6">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
