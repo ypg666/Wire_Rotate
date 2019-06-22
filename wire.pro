@@ -57,7 +57,8 @@ SOURCES += \
     sys.cpp \
     sysdate.cpp \
     writeregistermodel.cpp \
-    TIS_Camera.cpp
+    TIS_Camera.cpp \
+    lineRotate.cpp
 
 HEADERS += \
         maindialog.h \
@@ -145,7 +146,8 @@ HEADERS += \
     sys.h \
     sysdate.h \
     TIS_Camera.h \
-    writeregistermodel.h
+    writeregistermodel.h \
+    LineRotate.h
 
 FORMS += \
         maindialog.ui \

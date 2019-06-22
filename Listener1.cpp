@@ -8,6 +8,7 @@
 #include "Listener1.h"
 #include "tisudshl.h"
 #include<QDebug>
+#include <opencv2\opencv.hpp>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -71,12 +72,47 @@ void Listener1::frameReady(Grabber& caller, smart_ptr<MemBuffer> pBuffer, DWORD 
 
 void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 {
+    sysdate.initFromConfig();
+    curnum=sysdate.readcur();
+    picnum=sysdate.readpic();
+
     char filename[MAX_PATH];
-////	if( currFrame < m_BufferWritten.size() )
 
-        sprintf( filename, "image%02i.bmp", currFrame );
+    qDebug() << curnum;
+    qDebug() << picnum;
 
-        saveToFileBMP( *pBuffer, filename );
+    sprintf( filename, "history/image%02i.bmp", curnum );
+
+    saveToFileBMP( *pBuffer, filename );
+
+    if(curnum <=  picnum)
+    {
+    curnum++;
+    sysdate.setcur(curnum);
+    }
+    else{curnum=1;sysdate.setcur(curnum);}
+//    cv::Mat testImage(480, 640 ,CV_8U, pBuffer->getPtr());
+//    cv::Mat testImage=cv::Mat(480,640,CV_8UC3,cv::Scalar(0,0,0));
+//    testImage.data=pBuffer->getPtr();
+//    cv::flip(testImage, testImage, 0);//垂直反转
+//    cv::imshow("Test", testImage);
+//    cv::imwrite("imaging.bmp", testImage);
+
+
+   cv::Mat testImage = cv::imread("C:/Users/Administrator/Desktop/1.bmp");
+    cv::imwrite("imaging.bmp", testImage);
+
+//    int rotate = 0;
+//    try {
+//        //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
+//        rotate = lineRotate.getRotate(testImage);
+//        lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
+//    }
+//    catch (const int errorcode)
+//    {
+//        std::cout << "ERROR CODE: "<< errorcode << std::endl;
+//    }
+//    std::cout << rotate << std::endl;
 
 }
 

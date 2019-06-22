@@ -20,15 +20,18 @@ public:
     void setpass(QString p);
     QString readpass();
     void setpic(QString p);
-    QString readpic();
+    int readpic();
     void sethis(QString p);
     QString readhis();
+    void setcur(int p);
+    int readcur();
     void initFromConfig();
 private:
     static QString password; //一定要记得初始化，对于静态变量，不然编译通不过
     static QString picnum;
     static QString hisnum;
-    void writeConfig(QString  p,QString  q,QString  z);
+    static QString curnum;
+    void writeConfig(QString  p,QString  q,QString  z,QString  x);
 };
 
 #endif // SYSDATE_H

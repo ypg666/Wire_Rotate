@@ -46,6 +46,7 @@ void TIS_Camera::Camera(QWidget *win)
 //    }
     atexit(DShowLib::ExitLibrary); //
 //    Grab1->showDevicePage();//bool
+    Grab1.removeListener(pListener1);
     if (Grab1.isDevValid())//
     {
         if( Grab1.getExternalTrigger() )
@@ -54,7 +55,7 @@ void TIS_Camera::Camera(QWidget *win)
         }
 //        pListener1 = new Listener1;
 //        Grab1.addListener(pListener1,DShowLib::GrabberListener::eFRAMEREADY);//
-        pSink = FrameHandlerSink::create( eY800,3);//
+        pSink = FrameHandlerSink::create( eRGB32,3);//黑白相机用eY800，彩色用eRGB32格式
         // Disable snap mode.
         pSink->setSnapMode(false);
         // Set the sink.
@@ -64,7 +65,7 @@ void TIS_Camera::Camera(QWidget *win)
         HWND appwnd;
         appwnd = (HWND)win->winId();
         // Set the window that should display the live video.
-        Grab1.setHWND(appwnd);//?
+        Grab1.setHWND(appwnd);//
 
         //Enables or disables the default window size lock of the video window.
         Grab1.setDefaultWindowPosition(false);
@@ -73,6 +74,9 @@ void TIS_Camera::Camera(QWidget *win)
 //         pGrabber->setWindowSize(1280,960);
         Grab1.setWindowSize(800,600);
         // Start the live video.
+//        long Width = Grab1.getAcqSizeMaxX();
+//        long Height = Grab1.getAcqSizeMaxY();  //获取图像大小
+//        Mat mat(Height, Width, CV_8U, pSink->getLastAcqMemBuffer()->getPtr());
         Grab1.startLive();
     }
 }
@@ -98,7 +102,7 @@ void TIS_Camera::Trigger(QWidget *win)
     {
         pListener1 = new Listener1;
         Grab1.addListener(pListener1,DShowLib::GrabberListener::eFRAMEREADY);//
-        pSink = FrameHandlerSink::create( eY800,3);//
+        pSink = FrameHandlerSink::create( eRGB32,3);//黑白相机用eY800，彩色用eRGB32格式
         // Disable snap mode.
         pSink->setSnapMode(false);
         // Set the sink.
