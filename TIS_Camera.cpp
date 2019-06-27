@@ -5,6 +5,7 @@
 #include "TIS_Camera.h"
 #include "Listener1.h"
 #include<opencv2\opencv.hpp>
+#include<opencv2\imgproc\types_c.h>
 #include "tisudshl.h"
 #include <QtCore/QCoreApplication>
 #include <QtGui>
@@ -17,6 +18,8 @@
 using namespace std;
 using namespace cv;
 using namespace DShowLib;
+
+TIS_Camera *TIS_Camera::_instance = 0;
 
 TIS_Camera::TIS_Camera()
 {
@@ -46,7 +49,8 @@ void TIS_Camera::Camera(QWidget *win)
 //    }
     atexit(DShowLib::ExitLibrary); //
 //    Grab1->showDevicePage();//bool
-    Grab1.removeListener(pListener1);
+//    Grab1.removeListener(pListener1);
+    Grab1.removeListener(Listener1::Instance());
     if (Grab1.isDevValid())//
     {
         if( Grab1.getExternalTrigger() )
@@ -56,6 +60,7 @@ void TIS_Camera::Camera(QWidget *win)
 //        pListener1 = new Listener1;
 //        Grab1.addListener(pListener1,DShowLib::GrabberListener::eFRAMEREADY);//
         pSink = FrameHandlerSink::create( eRGB32,3);//黑白相机用eY800，彩色用eRGB32格式
+       // pSink = FrameHandlerSink::create( eY800,3);
         // Disable snap mode.
         pSink->setSnapMode(false);
         // Set the sink.
@@ -100,8 +105,8 @@ void TIS_Camera::Trigger(QWidget *win)
 //    Grab1->showDevicePage();//bool
     if (Grab1.isDevValid())//
     {
-        pListener1 = new Listener1;
-        Grab1.addListener(pListener1,DShowLib::GrabberListener::eFRAMEREADY);//
+       // pListener1 = new Listener1;
+        Grab1.addListener(Listener1::Instance(),DShowLib::GrabberListener::eFRAMEREADY);//
         pSink = FrameHandlerSink::create( eRGB32,3);//黑白相机用eY800，彩色用eRGB32格式
         // Disable snap mode.
         pSink->setSnapMode(false);
@@ -189,24 +194,36 @@ void TIS_Camera::CameraShowImage()//实时显示图片
     }
 
 }
-
+*/
+bool TIS_Camera::Valid()
+{
+    if (Grab1.isDevValid())
+    {
+        return true;
+    }
+    else return false;
+}
 //获取图片
 Mat TIS_Camera::GetMatImage()
 {
+    if (Grab1.isDevValid())
+    {
     pSink->setSnapMode(true);
     // Apply the sink to the grabber.
-    Grab1->setSinkType(pSink);
-    Grab1->startLive();				// Start the grabber.
+    Grab1.setSinkType(pSink);
+   // Grab1.startLive();				// Start the grabber.
     pSink->snapImages(1);
-    Grab1->stopLive();					// Stop the grabber.
+   // Grab1.stopLive();					// Stop the grabber.
 
     //获取图像格式
     int nChannels = 1;
-    long Width = Grab1->getAcqSizeMaxX();
-    long Height = Grab1->getAcqSizeMaxY();  //获取图像大小
+    long Width = Grab1.getAcqSizeMaxX();
+    long Height = Grab1.getAcqSizeMaxY();  //获取图像大小
     int depth = pSink->getLastAcqMemBuffer()->getBitsPerPixel();//获取图像深度
-    Mat mat(Height, Width, CV_8U, pSink->getLastAcqMemBuffer()->getPtr());
+    Mat mat(Height, Width, CV_8UC4, pSink->getLastAcqMemBuffer()->getPtr());
+    // CV_8U
     return mat;
+    }
     /*
     //通过数据指针保存图片
     Mat mat(Height, Width, CV_8U, pSink->getLastAcqMemBuffer()->getPtr());
@@ -220,7 +237,7 @@ Mat TIS_Camera::GetMatImage()
 //	namedWindow("Test", WINDOW_AUTOSIZE);
 //	cvShowImage("Test", img_src);
 //	cvWaitKey(0);
-//}
+}
 /*
 //退出后关闭相机
 void TIS_Camera::CameraClose()
@@ -288,7 +305,7 @@ void TIS_Camera::CamBin(int Bvalue)
 }
 
 
-
+*/
 QImage TIS_Camera::cvMat2QImage(const cv::Mat& mat, bool clone, bool rb_swap)
 {
     const uchar *pSrc = (const uchar*)mat.data;
@@ -333,4 +350,4 @@ QImage TIS_Camera::cvMat2QImage(const cv::Mat& mat, bool clone, bool rb_swap)
         return QImage();
     }
 }
-*/
+

@@ -18,7 +18,7 @@ Password::Password(QWidget *parent) :
     ui->lineEdit->setEchoMode(QLineEdit::Password);//输入时显示数字，失去焦点时显示圆点
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(on_loginBtn_clicked()));
     connect(ui->pushButton_2, SIGNAL(clicked(bool)), this, SLOT(close()));
-    connect(&w4, SIGNAL(ini()), this, SLOT(finish()));
+    //connect(&w4, SIGNAL(ini()), this, SLOT(finish()));
 }
 
 Password::~Password()
@@ -46,7 +46,8 @@ void Password::on_loginBtn_clicked()
     else if (ui->lineEdit->text() == q && flag ==1)
     {
         ui->lineEdit->clear();
-        w4.CameraInit();
+//        w4.CameraInit();
+        TIS_Camera::Instance()->CameraInit();
 //        w4.Camerapropery();
         this->close();
     }

@@ -10,7 +10,7 @@ HistoryImage::HistoryImage(QWidget *parent) :
     //界面初始化
     setWindowFlags(Qt::WindowCloseButtonHint); //隐藏标题栏问号
     ui->qTableWidget->setColumnCount(3);//设置列数
-    ui->qTableWidget->setRowCount(maxrow);//设置行数
+    ui->qTableWidget->setRowCount(100);//设置行数
     ui->qTableWidget->setColumnWidth(0,250);//设置行宽   150
     ui->qTableWidget->setColumnWidth(1,180);//50
     ui->qTableWidget->setColumnWidth(2,180);//80
@@ -72,10 +72,13 @@ HistoryImage::~HistoryImage()
 
 void HistoryImage::hisupdate()
 {
+    p.initFromConfig();
+    maxrow = p.readpic();
+    ui->qTableWidget->setRowCount(maxrow);//设置行数
     //QDir *dir=new QDir(QDir::currentPath());现在的目录 QAppllication::appllicationDirPath()绝对路径
     dir ->setSorting(QDir::Name);  //排列方式
     dir ->sorting();
-    filter<<"*.jpg"<<"*.png";
+    filter<<"*.bmp"<<"*.jpg"<<"*.png";
     dir->setNameFilters(filter);
     fileInfo=new QList<QFileInfo>(dir->entryInfoList(filter));
     for(int i = 0; i < (fileInfo->count()); i++)

@@ -53,7 +53,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>200</width>
            <height>50</height>
           </size>
          </property>
@@ -81,7 +81,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>200</width>
            <height>50</height>
           </size>
          </property>
@@ -106,7 +106,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>200</width>
            <height>50</height>
           </size>
          </property>
@@ -131,7 +131,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>200</width>
            <height>50</height>
           </size>
          </property>
@@ -143,31 +143,6 @@
          </property>
          <property name="text">
           <string>相机设置</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_10">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>150</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>微软雅黑</family>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>通讯设置</string>
          </property>
         </widget>
        </item>

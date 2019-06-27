@@ -58,7 +58,9 @@ SOURCES += \
     sysdate.cpp \
     writeregistermodel.cpp \
     TIS_Camera.cpp \
-    lineRotate.cpp
+    lineRotate.cpp \
+    easyModbus02.cpp \
+    statewidget.cpp
 
 HEADERS += \
         maindialog.h \
@@ -147,7 +149,10 @@ HEADERS += \
     sysdate.h \
     TIS_Camera.h \
     writeregistermodel.h \
-    LineRotate.h
+    LineRotate.h \
+    CRC16.h \
+    easyModbus02.h \
+    statewidget.h
 
 FORMS += \
         maindialog.ui \
@@ -165,22 +170,34 @@ FORMS += \
 DEPENDPATH += $$PWD/include
 
 INCLUDEPATH += $$quote(D:\QT\wire\include)
-INCLUDEPATH += D:\OPENCV\build\include
-INCLUDEPATH += D:\OPENCV\build\include\opencv2
+#INCLUDEPATH += D:\OPENCV\build\include
+#INCLUDEPATH += D:\OPENCV\build\include\opencv2
+INCLUDEPATH += D:\OPENCV\opencv4.1\build\include
+INCLUDEPATH += D:\OPENCV\opencv4.1\build\include\opencv2
 
 LIBS += $$quote(D:\QT\wire\Library\TIS_UDSHL11_x64.lib)
 LIBS += $$quote(D:\QT\wire\Library\TIS_UDSHL11d_x64.lib)
 
 win32: LIBS += -L$$PWD/Library/ -llibmodbus-5
 
+#CONFIG(debug, debug|release): {
+#LIBS += -LD:\OPENCV\build\x64\vc14\lib \
+#-lopencv_world320 \
+#-lopencv_world320d \
+#} else:CONFIG(release, debug|release): {
+#LIBS += -LD:\OPENCV\build\x64\vc14\lib \
+#-lopencv_world320 \
+#-lopencv_world320d \
+#}
+
 CONFIG(debug, debug|release): {
-LIBS += -LD:\OPENCV\build\x64\vc14\lib \
--lopencv_world320 \
--lopencv_world320d \
+LIBS += -LD:\OPENCV\opencv4.1\build\x64\vc14\lib \
+#-lopencv_world410 \
+-lopencv_world410d \
 } else:CONFIG(release, debug|release): {
-LIBS += -LD:\OPENCV\build\x64\vc14\lib \
--lopencv_world320 \
--lopencv_world320d \
+LIBS += -LD:\OPENCV\opencv4.1\build\x64\vc14\lib \
+-lopencv_world410 \
+#-lopencv_world410d \
 }
 
 DISTFILES +=

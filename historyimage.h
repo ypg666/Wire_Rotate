@@ -1,7 +1,7 @@
 ﻿/*
 历史图片对话框
 需图片存放格式.jpg或者.png
-命名格式  "旋转角度-流程编号.jpg/png" 如旋转角度 第1流程编号 "2-1.jpg"
+命名格式  "旋转角度-流程编号.bmp/jpg/png" 如旋转角度 第1流程编号 "2-1.jpg"
  */
 /*******************************************************************************
 * 类 名         : HistoryImage
@@ -22,8 +22,9 @@
 #include <Qstring>
 #include <QLabel>
 #include <QScrollBar>
+#include "sysdate.h"
 
-#define maxrow 100   //列表最大显示数
+//#define maxrow 100   //列表最大显示数
 #define image_path "C:/Users/Administrator/Desktop/1/"  //存放图片的路径
 static int nCurScroller=0; //翻页时的当时滑动条位置
 static int pageValue = 10; // 一页显示条数
@@ -44,7 +45,8 @@ public:
     QDir *dir=new QDir(path);
     QStringList filter;
     QList<QFileInfo> *fileInfo;
-
+    int maxrow;
+    SysDate p;
 
 private slots:
     void onContextMenu(const QPoint &pt);

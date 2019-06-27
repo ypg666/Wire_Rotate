@@ -51,10 +51,19 @@ MainDialog::MainDialog(QWidget *parent) :
     connect(ui->pushButton_6, SIGNAL(clicked(bool)), this, SLOT(password1()));
     connect(ui->pushButton_8, SIGNAL(clicked(bool)), this, SLOT(close()));
     connect(ui->pushButton_7, SIGNAL(clicked(bool)), this, SLOT(historyimage()));
-    connect(ui->pushButton_9, SIGNAL(clicked(bool)), this, SLOT(grab()));
-    connect(ui->pushButton_10, SIGNAL(clicked(bool)), this, SLOT(modbus()));
+    //connect(ui->pushButton_9, SIGNAL(clicked(bool)), this, SLOT(grab()));
+    //connect(ui->pushButton_10, SIGNAL(clicked(bool)), this, SLOT(modbus()));
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerOut()));
-    connect(&w2, SIGNAL(fin()), this, SLOT(normal()));
+    //connect(&w2, SIGNAL(fin()), this, SLOT(normal())); //相机设置完更新显示界面
+
+    connect(&w3, SIGNAL(grab_signal()), this, SLOT(grab1()));
+    connect(&w3, SIGNAL(caculate()), this, SLOT(caculate1()));
+    connect(&w3, SIGNAL(outcome()), this, SLOT(outcome1()));
+    connect(&w3, SIGNAL(out(int)), this, SLOT(outcome2(int)));
+    connect(&w3, SIGNAL(deflection(int)), this, SLOT(set_deflection(int)));
+
+    connect(TIS_Camera::Instance(), SIGNAL(ini()), this, SLOT(normal()));
+    connect(Listener1::Instance(), SIGNAL(finish(int)), this, SLOT(show1(int)));
 }
 
 MainDialog::~MainDialog()
@@ -73,7 +82,7 @@ void MainDialog::fun()
         ui->pushButton_3->setEnabled(false);
         ui->pushButton_4->setEnabled(false);
         ui->pushButton_6->setEnabled(false);
-        ui->pushButton_10->setEnabled(false);
+        //ui->pushButton_10->setEnabled(false);
         ui->pushButton_7->setEnabled(false);
         ui->pushButton_9->setEnabled(false);
         ui->pushButton->setText(QString("停止检测"));
@@ -87,12 +96,30 @@ void MainDialog::fun()
         ui->pushButton_6->setEnabled(true);
         ui->pushButton_7->setEnabled(true);
         ui->pushButton_9->setEnabled(true);
-        ui->pushButton_10->setEnabled(true);
+        //ui->pushButton_10->setEnabled(true);
         ui->pushButton->setText(QString("开始运行"));
         cam.Camera(ui->widget);
         this->update();
     }
 
+}
+//显示函数  输入：l为旋转角度 直接modbus输出 并且在对应界面显示角度 并增加检测数量
+void MainDialog::show1(int l)
+{
+    easymodbus.sendMsg(l);
+    ui->lcdNumber_2->display(l);
+    ui->lcdNumber->display(l1);
+    l1=l;
+
+    QString str1=p.readhis();
+    int num2 = str1.toInt();  //历史检测数量
+    num++; num2++;
+    str1=QString::number(num2);
+    p.sethis(str1);
+    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
+    ui->label_5->setText(num1);
+    ui->label_6->setText(str1);
+    this->update();
 }
 void MainDialog::historyimage()
 {
@@ -113,23 +140,53 @@ void MainDialog::password1()
     w2.setflag(1);
     w2.show();
 }
-void MainDialog::grab()
+void MainDialog::grab1()
 {
-//    QImage img;QString filename;QString path=image_path;
+    if(cam.Valid())
+    {
+//    int n = p.readcur(); //用来命名  不显示角度了  直接用来看存的图
+//    QString filename;QString path=image_path;
 //    QString str=QString::number(i);
-//    img = cam.GetMatImage();
+
+    grab_img = cam.GetMatImage();
+    cv::flip(grab_img, grab_img, 0);//垂直反转
+    cv::imshow("Test", grab_img);
+//    cv::waitKey();
+//    QImage img = cam.cvMat2QImage(grab_img,true,false);
+//    img.save("test/Qimg.jpg", "JPG", 100);
+    cv::imwrite("test/grab_img.bmp", grab_img);
 //    filename = filename.append(path + "90°-" + str +".jpg");
-//    img.save(filename, "JPG", 100);
-//    i++;
-    QString str1=p.readhis();
-    int num2 = str1.toInt();
-    num++; num2++;
-    str1=QString::number(num2);
-    p.sethis(str1);
-    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
-    ui->label_5->setText(num1);
-    ui->label_6->setText(str1);
-    this->update();
+//    grab_img.save(filename, "JPG", 100); 要用OPENCV mat保存图片
+}
+    else {qDebug() << "相机未连接";}
+
+//    QString str1=p.readhis();
+//    int num2 = str1.toInt();
+//    num++; num2++;
+//    str1=QString::number(num2);
+//    p.sethis(str1);
+//    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
+//    ui->label_5->setText(num1);
+//    ui->label_6->setText(str1);
+//    this->update();
+}
+void MainDialog::caculate1() //分步计算
+{
+    LineRotate c;
+    rotate = c.getRotate(grab_img);
+    ui->lcdNumber_2->display(rotate);
+}
+void MainDialog::outcome1()     //分步输出
+{
+    easymodbus.sendMsg(rotate);
+}
+void MainDialog::outcome2(int val)  //直接输出角度
+{
+    easymodbus.sendMsg(val);
+}
+void MainDialog::set_deflection(int val)  //设置偏转角度  需要写到数据类里
+{
+    easymodbus.sendMsg(val);
 }
 void MainDialog::onTimerOut()
 {
@@ -138,10 +195,10 @@ void MainDialog::onTimerOut()
   //设置晶体管控件QLCDNumber上显示的内容
   ui->lcdNumber_3->display(time.toString("hh:mm:ss"));
 }
-void MainDialog::modbus()
-{
-    w4.show();
-}
+//void MainDialog::modbus()
+//{
+//    w4.show();
+//}
 
 //获取图片像素
 //{

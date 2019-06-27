@@ -29,7 +29,7 @@ public:
     ~Password();
     SysDate p;
     Sys w3;
-    TIS_Camera w4;
+//    TIS_Camera w4;
     QString q;
     void setflag(int i);
 signals:

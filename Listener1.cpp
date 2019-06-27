@@ -17,6 +17,7 @@ static char THIS_FILE[]=__FILE__;
 #endif
 using namespace DShowLib;
 
+Listener1 *Listener1::_instance = 0;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -78,12 +79,9 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 
     char filename[MAX_PATH];
 
-    qDebug() << curnum;
-    qDebug() << picnum;
+//    sprintf( filename, "history/image%02i.bmp", curnum );
 
-    sprintf( filename, "history/image%02i.bmp", curnum );
-
-    saveToFileBMP( *pBuffer, filename );
+    //saveToFileBMP( *pBuffer, filename );
 
     if(curnum <=  picnum)
     {
@@ -91,18 +89,14 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
     sysdate.setcur(curnum);
     }
     else{curnum=1;sysdate.setcur(curnum);}
-//    cv::Mat testImage(480, 640 ,CV_8U, pBuffer->getPtr());
-//    cv::Mat testImage=cv::Mat(480,640,CV_8UC3,cv::Scalar(0,0,0));
-//    testImage.data=pBuffer->getPtr();
-//    cv::flip(testImage, testImage, 0);//垂直反转
+    cv::Mat testImage(480, 640 ,CV_8UC4, pBuffer->getPtr());
+    cv::flip(testImage, testImage, 0);//垂直反转
 //    cv::imshow("Test", testImage);
-//    cv::imwrite("imaging.bmp", testImage);
+//    cv::imwrite("test/imaging.bmp", testImage);
 
+//    cv::Mat testImage = cv::imread(filename);
 
-   cv::Mat testImage = cv::imread("C:/Users/Administrator/Desktop/1.bmp");
-    cv::imwrite("imaging.bmp", testImage);
-
-//    int rotate = 0;
+    int rotate = 0;
 //    try {
 //        //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
 //        rotate = lineRotate.getRotate(testImage);
@@ -114,6 +108,9 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 //    }
 //    std::cout << rotate << std::endl;
 
+//    sprintf( filename, "history/%04i-%04i.bmp", rotate,curnum );
+//    cv::imwrite(filename, testImage);
+//    emit finish(rotate);
 }
 
 //void Listener1::SetViewWnd(CWnd*wnd)
