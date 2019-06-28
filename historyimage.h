@@ -25,7 +25,8 @@
 #include "sysdate.h"
 
 //#define maxrow 100   //列表最大显示数
-#define image_path "C:/Users/Administrator/Desktop/1/"  //存放图片的路径
+//#define image_path "C:/Users/Administrator/Desktop/1/"  //存放图片的路径
+#define image_path "history/"  //存放图片的路径
 static int nCurScroller=0; //翻页时的当时滑动条位置
 static int pageValue = 10; // 一页显示条数
 

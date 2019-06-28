@@ -91,6 +91,7 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
     else{curnum=1;sysdate.setcur(curnum);}
     cv::Mat testImage(480, 640 ,CV_8UC4, pBuffer->getPtr());
     cv::flip(testImage, testImage, 0);//´¹Ö±·´×ª
+
 //    cv::imshow("Test", testImage);
 //    cv::imwrite("test/imaging.bmp", testImage);
 
@@ -109,8 +110,9 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 //    std::cout << rotate << std::endl;
 
 //    sprintf( filename, "history/%04i-%04i.bmp", rotate,curnum );
-//    cv::imwrite(filename, testImage);
-//    emit finish(rotate);
+    sprintf( filename, "history/%i-%i.bmp", rotate,curnum );
+    cv::imwrite(filename, testImage);
+    emit finish(rotate);
 }
 
 //void Listener1::SetViewWnd(CWnd*wnd)

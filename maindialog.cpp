@@ -21,6 +21,8 @@ MainDialog::MainDialog(QWidget *parent) :
 //    ca =new CameraDisplay(20,this);
 //    ui->horizontalLayout->addWidget(ca);
 
+    //相机界面会这些覆盖！
+    ui->label_8->setText("相机无信号");
     //调用开启相机自带的窗口，不卡顿，但窗口适应有些问题
     cam.Camera(ui->widget);
 //    cam.Trigger(ui->widget);
@@ -84,7 +86,7 @@ void MainDialog::fun()
         ui->pushButton_6->setEnabled(false);
         //ui->pushButton_10->setEnabled(false);
         ui->pushButton_7->setEnabled(false);
-        ui->pushButton_9->setEnabled(false);
+        //ui->pushButton_9->setEnabled(false);
         ui->pushButton->setText(QString("停止检测"));
         cam.Trigger(ui->widget);
         this->update();
@@ -95,7 +97,7 @@ void MainDialog::fun()
         ui->pushButton_4->setEnabled(true);
         ui->pushButton_6->setEnabled(true);
         ui->pushButton_7->setEnabled(true);
-        ui->pushButton_9->setEnabled(true);
+        //ui->pushButton_9->setEnabled(true);
         //ui->pushButton_10->setEnabled(true);
         ui->pushButton->setText(QString("开始运行"));
         cam.Camera(ui->widget);
