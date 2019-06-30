@@ -77,7 +77,10 @@ void TIS_Camera::Camera(QWidget *win)
         //Sets the size of the video window.
 //        pGrabber->setWindowSize(ui->widget->width(),ui->widget->height());
 //         pGrabber->setWindowSize(1280,960);
-        Grab1.setWindowSize(800,600);
+
+        //Grab1.setWindowSize(800,600);
+        Grab1.setWindowSize(1280,660);
+
         // Start the live video.
 //        long Width = Grab1.getAcqSizeMaxX();
 //        long Height = Grab1.getAcqSizeMaxY();  //获取图像大小
@@ -132,7 +135,7 @@ void TIS_Camera::Trigger(QWidget *win)
         //Sets the size of the video window.
 //        pGrabber->setWindowSize(ui->widget->width(),ui->widget->height());
 //         pGrabber->setWindowSize(1280,960);
-        Grab1.setWindowSize(800,600);
+        Grab1.setWindowSize(1280,660);
         // Start the live video.
         Grab1.startLive();
     }

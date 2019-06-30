@@ -146,3 +146,132 @@ namespace CRC16 {
 
 }
 
+
+// 与CRC16 代码很多重复，为了增加模块可移植性
+namespace LRC {
+
+    typedef unsigned char BYTE;
+    typedef unsigned short WORD;
+
+    // https://www.modbustools.com/modbus.html
+    inline BYTE calLRC(BYTE *nData, WORD wLength)
+    {
+        BYTE nLRC = 0; // LRC char initialized
+
+        for (int i = 0; i < wLength; i++) {
+            nLRC += *nData++;
+        }
+
+        return (BYTE)(-nLRC);
+
+    } // End: LRC
+
+    inline std::string intToHex2(int input)
+    {
+        std::stringstream stream;
+        stream << std::setw(2) << std::setfill('0') << std::hex << input;
+        return stream.str();
+    }
+
+    inline void mytoupper(BYTE *nData, WORD wLength) {
+        for (int i = 0; i < wLength; i++) {
+            if (*nData >= 'a' && *nData <= 'z') {
+                *nData = toupper(*nData);
+            }
+            nData++;
+        }
+    }
+
+    inline std::string mytoupper2(std::string nData) {
+        // std::cout << "==" << "SIZE: " << nData.size() << "==" << std::endl;
+        for (int i = 0; i < nData.size(); i++) {
+            // std::cout << "==" << nData[i] << "==" << std::endl;
+            if (nData[i] >= 'a' && nData[i] <= 'z') {
+                nData[i] = toupper(nData[i]);
+            }
+        }
+        return nData;
+    }
+
+    inline std::string convertCharToHexString(const BYTE *nData, WORD wLength) {
+        std::string res;
+        while (wLength--)
+        {
+            res.append(mytoupper2(intToHex2(static_cast<int>(*nData++))));
+        }
+        return res;
+    }
+
+    inline std::string convertStringToFinalAscii(std::string temp) {
+
+        std::string results = "3A";
+
+        std::stringstream tempStream;
+        // 拼接校验码
+        for (size_t i = 0; i < temp.size(); i++)
+        {
+            if (temp[i] == ' ') {
+                continue;
+            }
+            tempStream << std::hex << int(temp[i]);
+            // std::cout << tempStream.str() << std::endl;
+            // tempStream.clear();
+        }
+        results.append(tempStream.str());
+        std::string tempRes = "0D0A";
+        results.append(tempRes);
+
+        std::cout << "===============================" << std::endl;
+        std::cout << "Results:   " << results << std::endl;
+        std::cout << "===============================" << std::endl;
+
+        return results;
+    }
+
+    // Modbus 采用char类型输出更为简单 -- 之所以用String输出，是为了直接对应之前的IOclass
+    inline std::string convertIntToModbusString(int input) {
+        const int wLength = 6;
+        // 设置初始值 -- 不包括校验码
+        BYTE byteArray[wLength] = { 0x01, 0x05, 0x05, 0x00, 0xFF, 0x00 };
+
+        // 处理符号位
+        if (input <= 0) {
+            *(byteArray + 4) = 0xFF;
+            input = std::abs(input);
+        }
+        else
+        {
+            *(byteArray + 4) = 0x00;
+        }
+
+        // 将绝对值转化为16进制
+        *(byteArray + 5) = static_cast<BYTE>(input);
+
+
+        std::string intStr1 = convertCharToHexString(byteArray, wLength);
+
+        std::cout << "===============================" << std::endl;
+        std::cout << "intStr1:   " << intStr1 << std::endl;
+        std::cout << "===============================" << std::endl;
+
+        // 校验码计算
+        BYTE tempLRC;
+        tempLRC= calLRC(byteArray, wLength);
+
+        std::string intStr2 = mytoupper2(intToHex2(tempLRC));
+
+        std::cout << "===============================" << std::endl;
+        //std::cout << intToHex2(tempLRC) << std::endl;
+        std::cout << "intStr2:   " << intStr2 << std::endl;
+        std::cout << "===============================" << std::endl;
+
+        intStr1.append(intStr2);
+
+        std::cout << "===============================" << std::endl;
+        std::cout << "intStr:   " << intStr1 << std::endl;
+        std::cout << "===============================" << std::endl;
+
+        return convertStringToFinalAscii(intStr1);
+    }
+
+}

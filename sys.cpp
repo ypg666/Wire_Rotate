@@ -12,6 +12,8 @@ Sys::Sys(QWidget *parent) :
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(Password()));
     connect(ui->pushButton_4, SIGNAL(clicked(bool)), this, SLOT(PicNum()));
     connect(ui->pushButton_5, SIGNAL(clicked(bool)), this, SLOT(close()));
+
+    ui->lineEdit_3->setPlaceholderText(QString::fromLocal8Bit("建议设置为100到1000之间"));//设置无输入时的提示信息
 }
 
 Sys::~Sys()
@@ -39,7 +41,14 @@ void Sys::Password()
 
 void Sys::PicNum()
 {
+    if(ui->lineEdit_3->text() ==  "")
+    {
+        QMessageBox::warning(this,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图片数量不能为空"),QMessageBox::Yes);
+    }
+    else
+    {
         p.setpic(ui->lineEdit_3->text());
         QMessageBox::warning(this,QString::fromLocal8Bit("成功"),QString::fromLocal8Bit("图片数量已修改"),QMessageBox::Yes);
-        qDebug() <<  p.readpic();
+        //qDebug() <<  p.readpic();
+    }
 }

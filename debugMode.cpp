@@ -38,7 +38,7 @@ void debugMode::on_pb_nextStep_clicked()
 
 	if (this->stateNumber == 0) {
 		for (int i = 0; i < this->numberOfLight; i++) {
-			vStateWidget.at(i)->m_color = Qt::red;
+            vStateWidget.at(i)->m_color = Qt::blue;
 			vStateWidget.at(i)->turnOn();
 			vStateWidget.at(i)->update();
 		}
@@ -71,7 +71,7 @@ void debugMode::on_pb_nextStep_clicked()
 void debugMode::on_pb_reset_clicked()
 {
 	for (int i = 0; i < this->numberOfLight; i++) {
-		vStateWidget.at(i)->m_color = Qt::red;
+        vStateWidget.at(i)->m_color = Qt::blue;
 		vStateWidget.at(i)->turnOn();
 		vStateWidget.at(i)->update();
 	}

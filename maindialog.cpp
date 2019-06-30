@@ -21,14 +21,15 @@ MainDialog::MainDialog(QWidget *parent) :
 //    ca =new CameraDisplay(20,this);
 //    ui->horizontalLayout->addWidget(ca);
 
-    //相机界面会这些覆盖！
-    ui->label_8->setText("相机无信号");
+    ui->label_8->setText("欢迎使用！");
+
     //调用开启相机自带的窗口，不卡顿，但窗口适应有些问题
     cam.Camera(ui->widget);
 //    cam.Trigger(ui->widget);
 
-    ui->lcdNumber_2->display("90°");
-    ui->lcdNumber->display("-180°");
+    //ui->lcdNumber_2->display("90°");
+    //ui->lcdNumber->display("-180°");
+    show1(0);
 
     //设置晶体管控件QLCDNumber能显示的位数
     ui->lcdNumber_3->setDigitCount(8);
@@ -89,6 +90,7 @@ void MainDialog::fun()
         //ui->pushButton_9->setEnabled(false);
         ui->pushButton->setText(QString("停止检测"));
         cam.Trigger(ui->widget);
+        ui->label_8->setText("正在运行");
         this->update();
     }
     else if(ui->pushButton->text()==(QString("停止检测")))
@@ -101,6 +103,7 @@ void MainDialog::fun()
         //ui->pushButton_10->setEnabled(true);
         ui->pushButton->setText(QString("开始运行"));
         cam.Camera(ui->widget);
+        ui->label_8->setText("未开始运行");
         this->update();
     }
 
@@ -115,10 +118,16 @@ void MainDialog::show1(int l)
 
     QString str1=p.readhis();
     int num2 = str1.toInt();  //历史检测数量
-    num++; num2++;
+    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
+    if(num != 0)
+    {
+        num2++;
+        if(num2 == 10000)
+        {num2 = 0;}
+    }
+    num++;
     str1=QString::number(num2);
     p.sethis(str1);
-    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
     ui->label_5->setText(num1);
     ui->label_6->setText(str1);
     this->update();

@@ -54,6 +54,18 @@
          <layout class="QHBoxLayout" name="hbox">
           <item>
            <widget class="stateWidget" name="wd_cameraGrabber" native="true">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>6</pointsize>
+              <kerning>true</kerning>
+             </font>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -64,15 +76,42 @@
           </item>
           <item>
            <widget class="stateWidget" name="wd_calculateDegree" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
             <property name="font">
              <font>
-              <family>Microsoft YaHei</family>
+              <family>微软雅黑</family>
+              <pointsize>6</pointsize>
+              <kerning>true</kerning>
              </font>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="stateWidget" name="wd_outputDegree" native="true"/>
+           <widget class="stateWidget" name="wd_outputDegree" native="true">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>6</pointsize>
+              <kerning>true</kerning>
+             </font>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
