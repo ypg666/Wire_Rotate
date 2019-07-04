@@ -6,35 +6,43 @@
 #include <QString>
 #include <string>
 #include "CRC16.h"
+#include <iostream>
 
-//modbus class, which is very different to easyModbus01.h
+/**
+* @brief        以ASCII的编码与PLC进行通讯
+*               类设计原理：
+*               1.类的构造函数分为easyModbus2(int) 功能是指定写入寄存器
+*               2.int initSerialPort() -- 自动检测并初始化串口并返回初始化串口的状态
+*               3.sengMsg 发送消息至串口
+*               4.readMsg 读取串口
+* @author        George
+* @date          2019-07-04
+*/
+
 class easyModbus2
 {
 public:
-    easyModbus2();
-    easyModbus2(int a);
-    easyModbus2(QString selfDefinedPortName);
+    easyModbus2() = default;
+    easyModbus2(int numberOfRegister);
     ~easyModbus2();
 
+    int initSerialPort();
 	void sendMsg(QString  input);           //发送数据
-	void sendMsg(int intInput);            //发送整形数据
+    void sendMsg(int intInput);             //发送整形角度数据
     QByteArray readMsg();                   //接收数据
 
 private:
 
 	QSerialPort serialPort;      //串口类
 	QString serialPortName;      //打开的串口
-    QString received_Msg;        //接收到的数据
-    QByteArray receive_byte;     //接收到的数据
 
-    QString matchMessageA = "01 06 01 98 00 08 08 1F";
-    QString matchMessageB = "01 06 01 98 00 08 08 1F";
+    // ==== The setting of modbus ===== //
+    //// == register == ////
+    int numberOfRegister = 4888;
 
-    QString matchMessageAA = "3a30313035303530304646303046360D0A";
+    //// == Matching message == ////
+    QString matchMessageAA = "3A30313036313331384646303043460D0A"; // int 0
+    QString matchMessageAB = "3a30313036313331384646303043460d0a";
 
-    QString matchMessageAB = "3a30313035303530304646303046360d0a";
-
-
-    bool rtuOrAscii = true;
 };
 

@@ -74,21 +74,22 @@ void HistoryImage::hisupdate()
 {
     p.initFromConfig();
     maxrow = p.readpic();
-    ui->qTableWidget->setRowCount(maxrow);//设置行数
+    //ui->qTableWidget->setRowCount(maxrow);//设置行数 ,用的是系统设置里的历史图像
     //QDir *dir=new QDir(QDir::currentPath());现在的目录 QAppllication::appllicationDirPath()绝对路径
     dir ->setSorting(QDir::Name);  //排列方式
     dir ->sorting();
     filter<<"*.bmp"<<"*.jpg"<<"*.png";
     dir->setNameFilters(filter);
     fileInfo=new QList<QFileInfo>(dir->entryInfoList(filter));
+    ui->qTableWidget->setRowCount(fileInfo->count());//设置行数
     for(int i = 0; i < (fileInfo->count()); i++)
     {   /*qDebug() <<  fileInfo;*/
         QString number;QString number1;
         QTableWidgetItem *item = new QTableWidgetItem(fileInfo->at(i).baseName());
         QTableWidgetItem *item2 = new QTableWidgetItem(fileInfo->at(i).baseName());
-        number = item ->text();number =number.section("-",0,0); item ->setText(number);
+        number = item ->text();number =number.section("_",0,0); item ->setText(number);
         ui->qTableWidget->setItem(i,1,item);
-        number1 = item2 ->text();number1 =number1.section("-",1,1); item2 ->setText(number1);
+        number1 = item2 ->text();number1 =number1.section("_",1,1); item2 ->setText(number1);
         ui->qTableWidget->setItem(i,2,item2);
         QTableWidgetItem *item1 = new QTableWidgetItem(fileInfo->at(i).created().toString("yyyy-MM-dd hh:mm:ss"));
         ui->qTableWidget->setItem(i,0,item1);
@@ -111,11 +112,11 @@ void HistoryImage::printAllSelect()
     QList<QTableWidgetItem*> tableItemList = ui->qTableWidget->selectedItems();
 //    qDebug() << tableItemList.count();
     if(tableItemList.count() == 0){return;} //判断是否为空item
-    filename = filename.append(path + tableItemList[1]->text() + "-" + tableItemList[2]->text() +".jpg");
+    filename = filename.append(path + tableItemList[1]->text() + "_" + tableItemList[2]->text() +".bmp");
     img->load(filename);
-    label ->setWindowTitle(QString::fromLocal8Bit("流程编号：")+tableItemList[0]->text()
-            +QString::fromLocal8Bit("，时间：")+tableItemList[1]->text()
-            +QString::fromLocal8Bit("，相机:")+tableItemList[2]->text());
+    label ->setWindowTitle(QString::fromLocal8Bit("时间：")+tableItemList[0]->text()
+            +QString::fromLocal8Bit("，角度：")+tableItemList[1]->text()
+            +QString::fromLocal8Bit("，流程编号:")+tableItemList[2]->text());
     label->setPixmap(QPixmap::fromImage(*img));
     label->show();
 }

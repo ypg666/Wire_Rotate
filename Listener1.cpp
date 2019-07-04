@@ -97,20 +97,22 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 
 //    cv::Mat testImage = cv::imread(filename);
 
-    int rotate = 0;
-//    try {
-//        //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
-//        rotate = lineRotate.getRotate(testImage);
-//        lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
-//    }
-//    catch (const int errorcode)
-//    {
-//        std::cout << "ERROR CODE: "<< errorcode << std::endl;
-//    }
-//    std::cout << rotate << std::endl;
 
-//    sprintf( filename, "history/%04i-%04i.bmp", rotate,curnum );
-    sprintf( filename, "history/%i-%i.bmp", rotate,curnum );
+    int rotate = 0;
+    try {
+        //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
+        rotate = lineRotate.getRotate(testImage);
+        lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
+    }
+    catch (const int errorcode)
+    {
+        //mei you chuang kou yao yong NULL
+        QMessageBox::warning(NULL,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图像中没有线材"),QMessageBox::Yes);
+        //std::cout << "ERROR CODE: "<< errorcode << std::endl;
+    }
+    std::cout << rotate << std::endl;
+
+    sprintf( filename, "history/%i_%i.bmp", rotate,curnum );
     cv::imwrite(filename, testImage);
     emit finish(rotate);
 }

@@ -1,3 +1,9 @@
+/*******************************************************************************
+* 类 名         : Listener1
+* 类功能		   : 相机回调，用来实现触发取图和处理
+* 输    入         : 无
+* 输    出         : 无
+*******************************************************************************/
 // Listener1.h: interface for the Listener1 class.
 //
 //////////////////////////////////////////////////////////////////////
@@ -5,6 +11,7 @@
 #include "LineRotate.h"
 #include "sysdate.h"
 #include <QObject>
+#include <QMessageBox>
 
 #if !defined(AFX_LISTENER1_H__9BF7AEC9_0888_4A16_88DD_2EA7C7D59C97__INCLUDED_)
 #define AFX_LISTENER1_H__9BF7AEC9_0888_4A16_88DD_2EA7C7D59C97__INCLUDED_

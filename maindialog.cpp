@@ -17,6 +17,21 @@ MainDialog::MainDialog(QWidget *parent) :
     //ui->pushButton->setStyleSheet(“border-image:url(me.png)”); 按钮添加背景图片
     ui->pushButton->setText(QString("开始运行"));
 
+    //毛玻璃透明度效果 （未实现）
+    if (QtWin::isCompositionEnabled())
+    {
+        QtWin::extendFrameIntoClientArea(this, -1, -1, -1, -1);
+        this->setAttribute(Qt::WA_TranslucentBackground, true);
+        this->setAttribute(Qt::WA_NoSystemBackground, false);
+        this->setStyleSheet("widget { background: transparent; }");
+    }
+    else
+    {
+        QtWin::resetExtendedFrame(this);
+        this->setAttribute(Qt::WA_TranslucentBackground, false);
+        this->setStyleSheet(QString("widget { background: %1; }").arg(QtWin::realColorizationColor().name()));
+    }
+
     //利用painEvent显示，会卡顿
 //    ca =new CameraDisplay(20,this);
 //    ui->horizontalLayout->addWidget(ca);
@@ -27,9 +42,11 @@ MainDialog::MainDialog(QWidget *parent) :
     cam.Camera(ui->widget);
 //    cam.Trigger(ui->widget);
 
-    //ui->lcdNumber_2->display("90°");
-    //ui->lcdNumber->display("-180°");
-    show1(0);
+    detect_cam();
+    detect_IO();
+    //    easy = easymodbus.initSerialPort();
+
+    //show1(0);
 
     //设置晶体管控件QLCDNumber能显示的位数
     ui->lcdNumber_3->setDigitCount(8);
@@ -48,23 +65,21 @@ MainDialog::MainDialog(QWidget *parent) :
 //    QPixmap pixmap("00.jpg");
 //    ui->label_7->setPixmap(pixmap);
     //slot
+    //主界面按钮信号槽
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(fun()));
     connect(ui->pushButton_3, SIGNAL(clicked(bool)), this, SLOT(debug()));
     connect(ui->pushButton_4, SIGNAL(clicked(bool)), this, SLOT(password()));
     connect(ui->pushButton_6, SIGNAL(clicked(bool)), this, SLOT(password1()));
     connect(ui->pushButton_8, SIGNAL(clicked(bool)), this, SLOT(close()));
     connect(ui->pushButton_7, SIGNAL(clicked(bool)), this, SLOT(historyimage()));
-    //connect(ui->pushButton_9, SIGNAL(clicked(bool)), this, SLOT(grab()));
-    //connect(ui->pushButton_10, SIGNAL(clicked(bool)), this, SLOT(modbus()));
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerOut()));
-    //connect(&w2, SIGNAL(fin()), this, SLOT(normal())); //相机设置完更新显示界面
-
+    //调试窗口的信号槽
     connect(&w3, SIGNAL(grab_signal()), this, SLOT(grab1()));
     connect(&w3, SIGNAL(caculate()), this, SLOT(caculate1()));
     connect(&w3, SIGNAL(outcome()), this, SLOT(outcome1()));
     connect(&w3, SIGNAL(out(int)), this, SLOT(outcome2(int)));
     connect(&w3, SIGNAL(deflection(int)), this, SLOT(set_deflection(int)));
-
+    //更新相机设置和算法计算后的信号槽
     connect(TIS_Camera::Instance(), SIGNAL(ini()), this, SLOT(normal()));
     connect(Listener1::Instance(), SIGNAL(finish(int)), this, SLOT(show1(int)));
 }
@@ -73,11 +88,12 @@ MainDialog::~MainDialog()
 {
     delete ui;
 }
-
+//实时显示图像
 void MainDialog::normal()
 {
     cam.Camera(ui->widget);
 }
+//开始检测 进入触发模式
 void MainDialog::fun()
 {
     if(ui->pushButton->text()==(QString("开始运行")))
@@ -90,7 +106,7 @@ void MainDialog::fun()
         //ui->pushButton_9->setEnabled(false);
         ui->pushButton->setText(QString("停止检测"));
         cam.Trigger(ui->widget);
-        ui->label_8->setText("正在运行");
+        ui->label_8->setText("正在运行,等待触发");
         this->update();
     }
     else if(ui->pushButton->text()==(QString("停止检测")))
@@ -132,25 +148,30 @@ void MainDialog::show1(int l)
     ui->label_6->setText(str1);
     this->update();
 }
+//历史图像界面
 void MainDialog::historyimage()
 {
     w1.hisupdate();
     w1.show();
 }
+//调试界面
 void MainDialog::debug()
 {
     w3.show();
 }
+//系统设置
 void MainDialog::password()
 {
     w2.setflag(0);
     w2.show();
 }
+//相机设置
 void MainDialog::password1()
 {
     w2.setflag(1);
     w2.show();
 }
+//调试窗口抓图
 void MainDialog::grab1()
 {
     if(cam.Valid())
@@ -199,6 +220,7 @@ void MainDialog::set_deflection(int val)  //设置偏转角度  需要写到数�
 {
     easymodbus.sendMsg(val);
 }
+//时钟
 void MainDialog::onTimerOut()
 {
   //获取系统当前时间
@@ -206,11 +228,34 @@ void MainDialog::onTimerOut()
   //设置晶体管控件QLCDNumber上显示的内容
   ui->lcdNumber_3->display(time.toString("hh:mm:ss"));
 }
-//void MainDialog::modbus()
-//{
-//    w4.show();
-//}
-
+//检测串口连接
+void MainDialog::detect_IO()
+{
+    if (easymodbus.initSerialPort() < 0)
+    {
+        int mess;
+        mess = QMessageBox::warning(this,QString("错误"),QString("串口未连接"),QMessageBox::Retry,QMessageBox::Ignore);
+        if (mess == 524288 )
+        {detect_IO();}
+        else if (mess == 1048576 )
+        {}
+    }
+}
+//检测相机连接
+void MainDialog::detect_cam()
+{
+    if (cam.Valid() == false)
+    {
+        int mess;
+        mess = QMessageBox::warning(this,QString("错误"),QString("相机未连接"),QMessageBox::Retry,QMessageBox::Ignore);
+        //qDebug() << mess;
+        if (mess == 524288 )
+        {detect_cam();}
+        else if (mess == 1048576 )
+        {}
+    }
+}
+//别的图像显示方式（没用到）
 //获取图片像素
 //{
 //QPainter painter(this);

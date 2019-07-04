@@ -16,6 +16,8 @@
 #include <QTimer>
 #include <QTime>
 #include <QStatusBar>
+#include <QtWin>
+#include <QMessageBox>
 
 #define image_path "C:/Users/Administrator/Desktop/1/"  //存放图片的路径
 namespace Ui {
@@ -29,32 +31,32 @@ class MainDialog : public QDialog
 public:
     explicit MainDialog(QWidget *parent = 0);
     ~MainDialog();
-    HistoryImage w1;
-    Password w2;
-    debugMode w3;
+    //创建对象命名不规范！
+    HistoryImage w1;  //历史图像窗口
+    Password w2;    //密码窗口
+    debugMode w3; //调试窗口
 //    MainWindow w4;
 //    CameraDisplay *ca;
-    DShowLib::Grabber *pGrabber;
-    TIS_Camera cam;
+    DShowLib::Grabber *pGrabber; //抓图
+    TIS_Camera cam; //相机
 //    Listener1 *pListener1; //回调对象
     easyModbus2 easymodbus;
     SysDate p; //数据类
 public slots:
-    void normal();
-    void show1(int l);
-    void grab1();
-    void caculate1();
-    void outcome1();
+    void normal(); //实时显示图像
+    void show1(int l);  //  算法处理完成后续主界面显示处理
+    void grab1();   //调试窗口抓图
+    void caculate1();   //调试窗口计算
+    void outcome1();    //调试输出角度
     void outcome2(int val);  //直接输出角度
     void set_deflection(int val);  //设置偏转角度
 private slots:
-    void fun();
-    void historyimage();
-    void debug();
-    void password();
-    void password1();
-//    void modbus();
-    void onTimerOut();
+    void fun(); //开始检测 进入触发模式
+    void historyimage();     //历史图像界面
+    void debug();   //调试界面
+    void password();    //系统设置
+    void password1();   //相机设置
+    void onTimerOut();  //时钟
 private:
     Ui::MainDialog *ui;
     QTimer *timer; //时间
@@ -64,6 +66,10 @@ private:
     int l1;  //上次检测角度
     Mat grab_img; //抓图
     int rotate = 0; //调试时的检测角度
+    int easy = 0; //串口检测flag
+
+    void detect_IO();//检测串口连接
+    void detect_cam(); //检测相机连接
 };
 
 #endif // MAINDIALOG_H

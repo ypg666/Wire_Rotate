@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QWidget>
 #include <QPushButton>
@@ -28,7 +28,7 @@ public:
     bool isOn() const;
     void setOn(bool on);
 
-    QColor m_color = Qt::red;
+    QColor m_color = Qt::blue;
 
 	QString lightTextStr = QString::fromUtf8("");
 
