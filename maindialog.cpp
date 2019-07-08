@@ -37,6 +37,9 @@ MainDialog::MainDialog(QWidget *parent) :
 //    ui->horizontalLayout->addWidget(ca);
 
     ui->label_8->setText("欢迎使用！");
+    ui->label_9->setText("华南理工大学   "
+                         "地址：XXXXXX   "
+                         "电话：XXXXXX   ");
 
     //调用开启相机自带的窗口，不卡顿，但窗口适应有些问题
     cam.Camera(ui->widget);
@@ -127,7 +130,8 @@ void MainDialog::fun()
 //显示函数  输入：l为旋转角度 直接modbus输出 并且在对应界面显示角度 并增加检测数量
 void MainDialog::show1(int l)
 {
-    easymodbus.sendMsg(l);
+    temp = p.read_deflection();
+    easymodbus.sendMsg(l+temp);
     ui->lcdNumber_2->display(l);
     ui->lcdNumber->display(l1);
     l1=l;
@@ -210,15 +214,18 @@ void MainDialog::caculate1() //分步计算
 }
 void MainDialog::outcome1()     //分步输出
 {
-    easymodbus.sendMsg(rotate);
+    temp = p.read_deflection();
+    easymodbus.sendMsg(rotate+temp);
 }
 void MainDialog::outcome2(int val)  //直接输出角度
 {
-    easymodbus.sendMsg(val);
+    temp = p.read_deflection();
+    easymodbus.sendMsg(val+temp);
 }
 void MainDialog::set_deflection(int val)  //设置偏转角度  需要写到数据类里
 {
-    easymodbus.sendMsg(val);
+    p.set_deflection(val);
+    p.initFromConfig();
 }
 //时钟
 void MainDialog::onTimerOut()

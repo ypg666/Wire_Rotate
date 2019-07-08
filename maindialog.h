@@ -67,6 +67,7 @@ private:
     Mat grab_img; //抓图
     int rotate = 0; //调试时的检测角度
     int easy = 0; //串口检测flag
+    int temp =0;//偏转角度临时计算
 
     void detect_IO();//检测串口连接
     void detect_cam(); //检测相机连接

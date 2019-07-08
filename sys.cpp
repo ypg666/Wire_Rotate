@@ -47,8 +47,17 @@ void Sys::PicNum()
     }
     else
     {
+        int tmp = ui->lineEdit_3->text().toInt();
+        if(tmp < 100)
+        {
+            p.setpic("100");
+            QMessageBox::warning(this,QString::fromLocal8Bit("成功"),QString::fromLocal8Bit("图片数量小于100，自动设置为100"),QMessageBox::Yes);
+        }
+        else
+        {
         p.setpic(ui->lineEdit_3->text());
         QMessageBox::warning(this,QString::fromLocal8Bit("成功"),QString::fromLocal8Bit("图片数量已修改"),QMessageBox::Yes);
         //qDebug() <<  p.readpic();
+        }
     }
 }

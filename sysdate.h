@@ -25,13 +25,16 @@ public:
     QString readhis();
     void setcur(int p);
     int readcur();
+    void set_deflection(int  p);
+    int read_deflection();
     void initFromConfig();
 private:
     static QString password; //一定要记得初始化，对于静态变量，不然编译通不过
-    static QString picnum;
-    static QString hisnum;
-    static QString curnum;
-    void writeConfig(QString  p,QString  q,QString  z,QString  x);
+    static QString picnum;  //存储数量
+    static QString hisnum;  //历史检测数量
+    static QString curnum;  //图片保存时，当前的序号
+    static QString deflection;  //偏转角度
+    void writeConfig(QString  p,QString  q,QString  z,QString  x,QString deflection1);
 };
 
 #endif // SYSDATE_H
