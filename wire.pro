@@ -6,7 +6,11 @@
 
 QT       += core gui
 QT       += serialbus serialport widgets
-QT += winextras
+QT += winextras #毛玻璃尝试
+
+#权限  需要以管理员运行creator
+QMAKE_LFLAGS += /MANIFESTUAC:\"level=\'requireAdministrator\' uiAccess=\'false\'\" #以管理员运行
+QMAKE_LFLAGS += /SUBSYSTEM:WINDOWS,\"5.01\" #VS2013 在XP运行
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -61,7 +65,11 @@ SOURCES += \
     TIS_Camera.cpp \
     lineRotate.cpp \
     easyModbus02.cpp \
-    statewidget.cpp
+    statewidget.cpp \
+    adjustparameters.cpp \
+    threeparams.cpp \
+    paramsetting.cpp \
+    ClassThresholdTools.cpp
 
 HEADERS += \
         maindialog.h \
@@ -153,7 +161,11 @@ HEADERS += \
     LineRotate.h \
     CRC16.h \
     easyModbus02.h \
-    statewidget.h
+    statewidget.h \
+    adjustparameters.h \
+    threeparams.h \
+    paramsetting.h \
+    ClassThresholdTools.h
 
 FORMS += \
         maindialog.ui \
@@ -163,7 +175,9 @@ FORMS += \
     sys.ui \
     debugMode.ui \
     mainwindow.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    adjustparameters.ui \
+    threeparams.ui
 
 #CONFIG += console
 

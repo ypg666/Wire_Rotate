@@ -1,38 +1,58 @@
 ﻿// lineRotate.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-//#include "pch.h"
 #include <iostream>
 #include "LineRotate.h"
+#include "ClassThresholdTools.h"
 #include <opencv2\opencv.hpp>
 #include <cmath>
 #include <numeric>
 #include <time.h>
 #include <io.h>
 #include <direct.h>
+#include <QDebug>
 
+thresholdValue LineRotate::thresholdValue_struct;
 /*
 int main()
 {
     std::cout << "Hello World!\n"; 
-    cv::Mat testImage = cv::imread("E:/outpack/line/line/24.bmp");
-
+    cv::Mat testImage = cv::imread("E:/outpack/line/line1/image35.bmp");
+    std::vector<std::vector<int>> params;
+    std::vector<int> blueThreshold{ 100, 120, 30, 255, 25, 255, 0, 255, 0, 255 };
+    std::vector<int> greenThreshold{ 45, 100, 70, 255, 50, 255, 0, 255, 0, 255 };
+    std::vector<int> yellowThreshold{ 120, 40, 0, 255, 50, 255, 0, 255, 0, 100 };
+    std::vector<int> brownThreshold{ 120, 40, 0, 255, 40, 255, 0, 255, 101, 255 };
+    params.push_back(blueThreshold);
+    params.push_back(greenThreshold);
+    params.push_back(yellowThreshold);
+    params.push_back(brownThreshold);
     //调用方法：
     //首先实例化一个对象，调用getRotate方法，根据重载不同，可以分别调用debug模式或者普通模式
     //在debug模式下需要输入debug信息的路径，这个路径是文件夹路径，做如下约定：路径中的斜杠统一采用正斜杠/而不采用反斜杠\；表示路径的url后面必须以/结尾
     //实际使用过程中尽量使用try…catch方法调用getRotate函数，根据抛出的异常大概确定问题所在，目前异常抛出的类型为整型，请用int类型捕获
-    LineRotate lineRotate; 
+    LineRotate *lineRotate = new LineRotate(); 
+    lineRotate->init(params);
     int rotate = 0;
     try {
         //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
-        rotate = lineRotate.getRotate(testImage);
-        lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
+        rotate = lineRotate->getRotate(testImage);
+        lineRotate->clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
     }
     catch (const int errorcode)
     {
         std::cout << "ERROR CODE: "<< errorcode << std::endl;
     }
     std::cout << rotate << std::endl;
+
+    // 调节工具测试
+    //ClassThresholdTools tools;
+    //cv::Mat result;
+    //std::vector<int> params { 120,40,0,255,25,255,0,255,100,255};
+    //tools.getThresholdResult(testImage, result, params);
+    //cv::imshow("result", result);
+    //cv::waitKey(0);
+    //cv::destroyAllWindows();
 
     //调用结束
     return 0;
@@ -65,6 +85,58 @@ LineRotate::~LineRotate()
         logHandle.close();
     }
     //std::cout << "file has closed" << std::endl;
+}
+
+int LineRotate::read()
+{
+    return thresholdValue_struct.yellow_h_min;
+}
+
+void LineRotate::init(std::vector<std::vector<int>> params) {
+    assert(params.size() == 4 && params[0].size() == 10);
+    thresholdValue_struct.blue_h_min = params[0][0];
+    thresholdValue_struct.blue_h_max = params[0][1];
+    thresholdValue_struct.blue_s_min = params[0][2];
+    thresholdValue_struct.blue_s_max = params[0][3];
+    thresholdValue_struct.blue_v_min = params[0][4];
+    thresholdValue_struct.blue_v_max = params[0][5];
+    thresholdValue_struct.blue_cr_min = params[0][6];
+    thresholdValue_struct.blue_cr_max = params[0][7];
+    thresholdValue_struct.blue_cb_min = params[0][8];
+    thresholdValue_struct.blue_cb_max = params[0][9];
+
+    thresholdValue_struct.green_h_min = params[1][0];
+    thresholdValue_struct.green_h_max = params[1][1];
+    thresholdValue_struct.green_s_min = params[1][2];
+    thresholdValue_struct.green_s_max = params[1][3];
+    thresholdValue_struct.green_v_min = params[1][4];
+    thresholdValue_struct.green_v_max = params[1][5];
+    thresholdValue_struct.green_cr_min = params[1][6];
+    thresholdValue_struct.green_cr_max = params[1][7];
+    thresholdValue_struct.green_cb_min = params[1][8];
+    thresholdValue_struct.green_cb_max = params[1][9];
+
+    thresholdValue_struct.yellow_h_min = params[2][0];
+    thresholdValue_struct.yellow_h_max = params[2][1];
+    thresholdValue_struct.yellow_s_min = params[2][2];
+    thresholdValue_struct.yellow_s_max = params[2][3];
+    thresholdValue_struct.yellow_v_min = params[2][4];
+    thresholdValue_struct.yellow_v_max = params[2][5];
+    thresholdValue_struct.yellow_cr_min = params[2][6];
+    thresholdValue_struct.yellow_cr_max = params[2][7];
+    thresholdValue_struct.yellow_cb_min = params[2][8];
+    thresholdValue_struct.yellow_cb_max = params[2][9];
+
+    thresholdValue_struct.brown_h_min = params[3][0];
+    thresholdValue_struct.brown_h_max = params[3][1];
+    thresholdValue_struct.brown_s_min = params[3][2];
+    thresholdValue_struct.brown_s_max = params[3][3];
+    thresholdValue_struct.brown_v_min = params[3][4];
+    thresholdValue_struct.brown_v_max = params[3][5];
+    thresholdValue_struct.brown_cr_min = params[3][6];
+    thresholdValue_struct.brown_cr_max = params[3][7];
+    thresholdValue_struct.brown_cb_min = params[3][8];
+    thresholdValue_struct.brown_cb_max = params[3][9];
 }
 
 int LineRotate::getRotate(cv::Mat srcImage)
@@ -259,32 +331,32 @@ void LineRotate::getColorMask(cv::Mat & image)
     cv::Mat ybMask1, ybMask2, ybMask3, ybMask;
     cv::Mat yellowMask1, yellowMask, brownMask1, brownMask, yellowgreenMask;
     //提取蓝色区域
-    cv::threshold(temp_HSV[0], blueMask1, 100, 255, cv::THRESH_BINARY);
-    cv::threshold(temp_HSV[0], blueMask2, 120, 255, cv::THRESH_BINARY_INV);
-    cv::threshold(temp_HSV[1], blueMask3, 30, 255, cv::THRESH_BINARY);
-    cv::threshold(temp_HSV[2], blueMask4, 25, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_HSV[0], blueMask1, thresholdValue_struct.blue_h_min, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_HSV[0], blueMask2, thresholdValue_struct.blue_h_max, 255, cv::THRESH_BINARY_INV);
+    cv::threshold(temp_HSV[1], blueMask3, thresholdValue_struct.blue_s_min, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_HSV[2], blueMask4, thresholdValue_struct.blue_v_min, 255, cv::THRESH_BINARY);
     cv::bitwise_and(blueMask1, blueMask2, blueMask);
     cv::bitwise_and(blueMask, blueMask3, blueMask);
     cv::bitwise_and(blueMask, blueMask4, blueMask);
-    //提取黄棕色区域
-    cv::threshold(temp_HSV[0], greenMask1, 45, 255, cv::THRESH_BINARY);
-    cv::threshold(temp_HSV[0], greenMask2, 100, 255, cv::THRESH_BINARY_INV);
-    cv::threshold(temp_HSV[1], greenMask3, 70, 255, cv::THRESH_BINARY);
-    cv::threshold(temp_HSV[2], greenMask4, 25, 255, cv::THRESH_BINARY);
+    //提取绿色区域
+    cv::threshold(temp_HSV[0], greenMask1, thresholdValue_struct.green_h_min, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_HSV[0], greenMask2, thresholdValue_struct.green_h_max, 255, cv::THRESH_BINARY_INV);
+    cv::threshold(temp_HSV[1], greenMask3, thresholdValue_struct.green_s_min, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_HSV[2], greenMask4, thresholdValue_struct.green_v_min,255, cv::THRESH_BINARY);
     cv::bitwise_and(greenMask1, greenMask2, greenMask);
     cv::bitwise_and(greenMask, greenMask3, greenMask);
     cv::bitwise_and(greenMask, greenMask4, greenMask);
     //提取黄棕色区域
-    cv::threshold(temp_HSV[0], ybMask1, 120, 255, cv::THRESH_BINARY);
-    cv::threshold(temp_HSV[0], ybMask2, 40, 255, cv::THRESH_BINARY_INV);
-    cv::threshold(temp_HSV[2], ybMask3, 25, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_HSV[0], ybMask1, thresholdValue_struct.yellow_h_min, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_HSV[0], ybMask2, thresholdValue_struct.yellow_h_max, 255, cv::THRESH_BINARY_INV);
+    cv::threshold(temp_HSV[2], ybMask3, thresholdValue_struct.yellow_v_min, 255, cv::THRESH_BINARY);
     cv::bitwise_or(ybMask1, ybMask2, ybMask);
     cv::bitwise_and(ybMask, ybMask3, ybMask);
     //提取黄色区域
-    cv::threshold(temp_YCrCb[2], yellowMask1, 100, 255, cv::THRESH_BINARY_INV);
+    cv::threshold(temp_YCrCb[2], yellowMask1, thresholdValue_struct.yellow_cb_max, 255, cv::THRESH_BINARY_INV);
     cv::bitwise_and(ybMask, yellowMask1, yellowMask);
     //提取棕色区域
-    cv::threshold(temp_YCrCb[2], brownMask1, 100, 255, cv::THRESH_BINARY);
+    cv::threshold(temp_YCrCb[2], brownMask1, thresholdValue_struct.brown_cb_min, 255, cv::THRESH_BINARY);
     cv::bitwise_and(ybMask, brownMask1, brownMask);
     //合并黄色和绿色区域
     cv::bitwise_or(yellowMask, greenMask, yellowgreenMask);

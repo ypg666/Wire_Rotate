@@ -105,14 +105,14 @@ void HistoryImage::onContextMenu(const QPoint &pt)
 
 void HistoryImage::printAllSelect()
 {
-    QString filename;const QString path=image_path;  //文件夹目录
+    QString filename;//const QString path=image_path;  //文件夹目录
     QImage *img =new QImage;
     QLabel *label =new QLabel();
     //tableItemList[2]->text()是空的时候 判断也会出错
     QList<QTableWidgetItem*> tableItemList = ui->qTableWidget->selectedItems();
 //    qDebug() << tableItemList.count();
     if(tableItemList.count() == 0){return;} //判断是否为空item
-    filename = filename.append(path + tableItemList[1]->text() + "_" + tableItemList[2]->text() +".bmp");
+    filename = filename.append(path + "/" + tableItemList[1]->text() + "_" + tableItemList[2]->text() +".bmp");
     img->load(filename);
     label ->setWindowTitle(QString::fromLocal8Bit("时间：")+tableItemList[0]->text()
             +QString::fromLocal8Bit("，角度：")+tableItemList[1]->text()

@@ -49,6 +49,14 @@ signals:
     void finish(int);
 private:
     static Listener1 *_instance;       //实例对象
+
+//    //算法初始参数
+//    std::vector<std::vector<int>> params;
+//    //基地最优参数
+//    std::vector<int> blueThreshold{ 100, 120, 30, 255, 25, 255, 0, 255, 0, 255 };
+//    std::vector<int> greenThreshold{ 45, 100, 70, 255, 50, 255, 0, 255, 0, 255 };
+//    std::vector<int> yellowThreshold{ 120, 40, 0, 255, 50, 255, 0, 255, 0, 100 };
+//    std::vector<int> brownThreshold{ 120, 40, 0, 255, 40, 255, 0, 255, 101, 255 };
 };
 
 

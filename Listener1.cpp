@@ -9,6 +9,7 @@
 #include "tisudshl.h"
 #include<QDebug>
 #include <opencv2\opencv.hpp>
+#include<QStandardPaths>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -35,7 +36,7 @@ Listener1::~Listener1()
 void Listener1::frameReady(Grabber& caller, smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 {     
 
-     qDebug() << "111";
+//     qDebug() << "111";
      saveImage( pBuffer, currFrame ); // Do the buffer processing.
 
      ::Sleep(5); // Simulate a time expensive processing.
@@ -79,10 +80,6 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 
     char filename[MAX_PATH];
 
-//    sprintf( filename, "history/image%02i.bmp", curnum );
-
-    //saveToFileBMP( *pBuffer, filename );
-
     if(curnum <=  picnum)
     {
     curnum++;
@@ -92,19 +89,21 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
     cv::Mat testImage(480, 640 ,CV_8UC4, pBuffer->getPtr());
     cv::flip(testImage, testImage, 0);//垂直反转
 
+    qDebug() << lineRotate.read();
 //    cv::imshow("Test", testImage);
 //    cv::imwrite("test/imaging.bmp", testImage);
 
-//    cv::Mat testImage = cv::imread(filename);
+//    cv::Mat testImage = cv::imread("imaging.bmp");
 
 
     int rotate = 0;
     try {
         //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
+
         rotate = lineRotate.getRotate(testImage);
-        lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
+        //lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
     }
-    catch (const int errorcode)
+    catch (const int errorcode )
     {
         //mei you chuang kou yao yong NULL
         QMessageBox::warning(NULL,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图像中没有线材"),QMessageBox::Yes);
@@ -112,8 +111,18 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
     }
     std::cout << rotate << std::endl;
 
-    sprintf( filename, "history/%i_%i.bmp", rotate,curnum );
-    cv::imwrite(filename, testImage);
+    QString qfilename = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    sprintf( filename, "/%i_%i.bmp", rotate,curnum );
+    // /history
+    // he bing zi fu chuan
+    //zhuan huan ge shi
+    qfilename = qfilename.append(filename);
+    char*  ch;
+    QByteArray ba = qfilename.toLatin1(); // must
+    ch = ba.data();
+
+    //qDebug() << ch ;
+    cv::imwrite(ch, testImage);
     emit finish(rotate);
 }
 

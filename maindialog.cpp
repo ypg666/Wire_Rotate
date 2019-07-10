@@ -36,20 +36,32 @@ MainDialog::MainDialog(QWidget *parent) :
 //    ca =new CameraDisplay(20,this);
 //    ui->horizontalLayout->addWidget(ca);
 
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+
+    //左状态栏 右状态栏
     ui->label_8->setText("欢迎使用！");
     ui->label_9->setText("华南理工大学   "
                          "地址：XXXXXX   "
                          "电话：XXXXXX   ");
 
-    //调用开启相机自带的窗口，不卡顿，但窗口适应有些问题
+    //调用开启相机自带的窗口
     cam.Camera(ui->widget);
 //    cam.Trigger(ui->widget);
 
+    //开机检测相机和串口
     detect_cam();
     detect_IO();
-    //    easy = easymodbus.initSerialPort();
 
-    //show1(0);
+    if(easymodbus.initSerialPort() > 0)  //串口初始化
+    {
+    show1(0);
+    }
+
+    //算法参数初始化
+    threeparams.write_params(params);//读算法参数
+    lineRotate.init(params);
+    qDebug() << lineRotate.read();
 
     //设置晶体管控件QLCDNumber能显示的位数
     ui->lcdNumber_3->setDigitCount(8);
@@ -67,6 +79,7 @@ MainDialog::MainDialog(QWidget *parent) :
 //    QImage *img=new QImage("./00.jpg");
 //    QPixmap pixmap("00.jpg");
 //    ui->label_7->setPixmap(pixmap);
+
     //slot
     //主界面按钮信号槽
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(fun()));
@@ -131,7 +144,9 @@ void MainDialog::fun()
 void MainDialog::show1(int l)
 {
     temp = p.read_deflection();
-    easymodbus.sendMsg(l+temp);
+    if (easymodbus.initSerialPort() > 0)
+    {easymodbus.sendMsg(l+temp);}
+    else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
     ui->lcdNumber_2->display(l);
     ui->lcdNumber->display(l1);
     l1=l;
@@ -180,50 +195,55 @@ void MainDialog::grab1()
 {
     if(cam.Valid())
     {
-//    int n = p.readcur(); //用来命名  不显示角度了  直接用来看存的图
-//    QString filename;QString path=image_path;
-//    QString str=QString::number(i);
+    grab_img = cv::imread("imaging.bmp");
 
-    grab_img = cam.GetMatImage();
+//    grab_img = cam.GetMatImage();
     cv::flip(grab_img, grab_img, 0);//垂直反转
-    cv::imshow("Test", grab_img);
-//    cv::waitKey();
-//    QImage img = cam.cvMat2QImage(grab_img,true,false);
-//    img.save("test/Qimg.jpg", "JPG", 100);
-    cv::imwrite("test/grab_img.bmp", grab_img);
-//    filename = filename.append(path + "90°-" + str +".jpg");
-//    grab_img.save(filename, "JPG", 100); 要用OPENCV mat保存图片
-}
-    else {qDebug() << "相机未连接";}
+    threeparams.inputImg = grab_img;
+    if (threeparams.hasInputImg = true )
+    {threeparams.show();}
 
-//    QString str1=p.readhis();
-//    int num2 = str1.toInt();
-//    num++; num2++;
-//    str1=QString::number(num2);
-//    p.sethis(str1);
-//    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
-//    ui->label_5->setText(num1);
-//    ui->label_6->setText(str1);
-//    this->update();
+    cv::imshow("Test", grab_img);
+    cv::imwrite("test/grab_img.bmp", grab_img);
+}
+    else {
+        QMessageBox::warning(NULL,QString("错误"),QString("相机未连接"),QMessageBox::Yes);
+    }
 }
 void MainDialog::caculate1() //分步计算
 {
-    LineRotate c;
-    rotate = c.getRotate(grab_img);
+    try {
+        //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
+        rotate = lineRotate.getRotate(grab_img);
+        qDebug() << rotate;
+        //lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
+    }
+    catch (const int errorcode)
+    {
+        //mei you chuang kou yao yong NULL
+        QMessageBox::warning(NULL,QString("错误"),QString("图像中没有线材"),QMessageBox::Yes);
+        //std::cout << "ERROR CODE: "<< errorcode << std::endl;
+    }
+    //rotate = c.getRotate(grab_img);
     ui->lcdNumber_2->display(rotate);
 }
 void MainDialog::outcome1()     //分步输出
 {
     temp = p.read_deflection();
-    easymodbus.sendMsg(rotate+temp);
+    if (easymodbus.initSerialPort() > 0)
+    {easymodbus.sendMsg(rotate+temp);}
+    else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
 }
 void MainDialog::outcome2(int val)  //直接输出角度
 {
     temp = p.read_deflection();
-    easymodbus.sendMsg(val+temp);
+    if (easymodbus.initSerialPort() > 0)
+    {easymodbus.sendMsg(val+temp);}
+    else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
 }
 void MainDialog::set_deflection(int val)  //设置偏转角度  需要写到数据类里
 {
+    QMessageBox::warning(NULL,QString("成功"),QString("设置成功"),QMessageBox::Yes);
     p.set_deflection(val);
     p.initFromConfig();
 }
@@ -241,10 +261,10 @@ void MainDialog::detect_IO()
     if (easymodbus.initSerialPort() < 0)
     {
         int mess;
-        mess = QMessageBox::warning(this,QString("错误"),QString("串口未连接"),QMessageBox::Retry,QMessageBox::Ignore);
-        if (mess == 524288 )
+        mess = QMessageBox::warning(this,QString("错误"),QString("串口未连接"),QString("重试"),QString("忽略"));
+        if (mess == 0 )
         {detect_IO();}
-        else if (mess == 1048576 )
+        else if (mess == 1 )
         {}
     }
 }
@@ -254,39 +274,17 @@ void MainDialog::detect_cam()
     if (cam.Valid() == false)
     {
         int mess;
-        mess = QMessageBox::warning(this,QString("错误"),QString("相机未连接"),QMessageBox::Retry,QMessageBox::Ignore);
+        mess = QMessageBox::warning(this,QString("错误"),QString("相机未连接"),QString("重试"),QString("忽略"));
         //qDebug() << mess;
-        if (mess == 524288 )
-        {detect_cam();}
-        else if (mess == 1048576 )
+        if (mess == 0 )
+        {
+            cam.Camera(ui->widget);
+            detect_cam();}
+        else if (mess == 1 )
         {}
     }
 }
 //别的图像显示方式（没用到）
-//获取图片像素
-//{
-//QPainter painter(this);
-
-// srcImage = new QImage("Image\\test.jpg");
-// if (srcImage->isNull())
-//     return;
-// int srcH = srcImage->height();
-// int srcW = srcImage->width();
-// //显示源图像
-// painter.drawImage(srcH, srcW, *srcImage, 0, 0);
-
-// destImage = new QImage(srcW, srcH, srcImage->format());
-// //扫描源图像素，实现翻转
-// for (int line=0; line<srcW; line++)
-//     for (int row=0; row<srcH; row++)
-//     {
-//         QRgb value = srcImage->pixel(row, line);
-//         destImage->setPixel(line, row,value);
-//     }
-
-// painter.drawImage(srcW, srcH, *destImage, 200, 200);
-// }
-
 
     //局部放大图片
 //1.       setMouseTracking（）; 打开鼠标移动跟踪
@@ -307,9 +305,5 @@ void MainDialog::detect_cam()
 //    height = mypixmap.height();
 //    pixmap = mypixmap.scaled(width * 5,height * 5，Qt::KeepAspectRatio);         //适应横纵比
 
-
-////    QPainter painter(&pixmap);
-////    painter.setPen(QColor(255,0,0));
-////painter.drawText(20,40,QString("%1").arg(x) + "," + QString("%1").arg(y));
 //    update();
 //}
