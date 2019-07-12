@@ -11,6 +11,7 @@
 #include "LineRotate.h"
 #include "sysdate.h"
 #include <QObject>
+#include <QWidget>
 #include <QMessageBox>
 
 #if !defined(AFX_LISTENER1_H__9BF7AEC9_0888_4A16_88DD_2EA7C7D59C97__INCLUDED_)
@@ -20,6 +21,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+// QWidget instead QObject
 class Listener1 :  public QObject,public DShowLib::GrabberListener
 {
        Q_OBJECT
@@ -47,6 +49,7 @@ public:
 //	  CWnd *viewWnd;
 signals:
     void finish(int);
+    void no_roi();
 private:
     static Listener1 *_instance;       //ÊµÀý¶ÔÏó
 

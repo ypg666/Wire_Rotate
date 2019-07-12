@@ -14,7 +14,7 @@ easyModbus2::~easyModbus2()
 
 int easyModbus2::initSerialPort()
 {
-
+    this->hasMatchPort = false;
     QStringList mPortNameList;  //´®¿ÚÁÐ±í
     QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
     if (!portList.empty()) {
@@ -51,6 +51,7 @@ int easyModbus2::initSerialPort()
                 QString receivedMsg = receiveByte.toHex();
                 if (receivedMsg == this->matchMessageAB)
                 {
+                    this->hasMatchPort = true;
                     // qDebug() << QObject::tr("Successful Opening of Serial Port: %1").arg(this->serialPortName) << endl;
                     return 1;
                 }
@@ -73,6 +74,10 @@ void easyModbus2::sendMsg(QString input)
 
     serialPort.clear();
     qint64 bytesWritten = serialPort.write(writeData);
+
+    if(bytesWritten == -1 || bytesWritten != writeData.size() || !serialPort.waitForBytesWritten(300)){
+        throw 100;
+    }
 
 //    if (bytesWritten == -1)
 //    {
@@ -97,6 +102,10 @@ void easyModbus2::sendMsg(QString input)
 void easyModbus2::sendMsg(int intInput)
 {
 
+    if(!this->hasMatchPort){
+        throw 100;
+    }
+
     QString input = QString::fromStdString(LRC::convertIntToModbusString(intInput, this->numberOfRegister));
     sendMsg(input);
 
@@ -114,7 +123,7 @@ void easyModbus2::sendMsg(int intInput)
 QByteArray easyModbus2::readMsg()
 {
 	QByteArray readData = serialPort.readAll();
-    while (serialPort.waitForReadyRead(1000)){
+    while (serialPort.waitForReadyRead(200)){
         readData.append(serialPort.readAll());
     }
 

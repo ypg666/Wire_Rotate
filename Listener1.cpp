@@ -7,6 +7,7 @@
 //#include "stdafx.h"
 #include "Listener1.h"
 #include "tisudshl.h"
+#include <iostream>
 #include<QDebug>
 #include <opencv2\opencv.hpp>
 #include<QStandardPaths>
@@ -17,6 +18,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 using namespace DShowLib;
+using namespace std;
 
 Listener1 *Listener1::_instance = 0;
 //////////////////////////////////////////////////////////////////////
@@ -89,7 +91,8 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
     cv::Mat testImage(480, 640 ,CV_8UC4, pBuffer->getPtr());
     cv::flip(testImage, testImage, 0);//垂直反转
 
-    qDebug() << lineRotate.read();
+//    qDebug() << lineRotate.read();
+
 //    cv::imshow("Test", testImage);
 //    cv::imwrite("test/imaging.bmp", testImage);
 
@@ -97,6 +100,7 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 
 
     int rotate = 0;
+//    cout << "start" << endl;
     try {
         //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
 
@@ -106,9 +110,16 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
     catch (const int errorcode )
     {
         //mei you chuang kou yao yong NULL
-        QMessageBox::warning(NULL,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图像中没有线材"),QMessageBox::Yes);
-        //std::cout << "ERROR CODE: "<< errorcode << std::endl;
+        // fei zhu xian cheng bu neng yong QMess
+//        QMessageBox::information(this,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图像中没有线材"),QMessageBox::Yes);
+
+        emit no_roi();
+//        return;
+
+        //        std::cout << "ERROR CODE: "<< errorcode << std::endl;
     }
+    lineRotate.clearTempData();
+//    cout << "end" << endl;
     std::cout << rotate << std::endl;
 
     QString qfilename = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);

@@ -1,14 +1,36 @@
 ﻿#include "maindialog.h"
 #include <QFile>
 #include <QApplication>
+#include <windows.h>
+#include <QProcess>
 
 void appAutoRun(bool bAutoRun);
+bool checkOnly();
+void IpConfig();
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    //检测程序重复启动
+    if(checkOnly()==false)
+    {return 0;}
+
+    //设置本机IP（连相机）
+    IpConfig();
+    //命令行启动方式 是否加自启
+  if(argc == 1)
+  {
     appAutoRun(true);
+
+    printf("Auto Run ! ");
+  }
+  //else if (argv[1] == "d")
+  else
+  {
+      appAutoRun(false);
+      printf("delete successful ! ");
+  }
 
     Q_INIT_RESOURCE(style1);
 
@@ -46,4 +68,33 @@ void appAutoRun(bool bAutoRun)
         reg->remove(appName);
     }
     reg->deleteLater();
+}
+//防止程序重复启动
+bool checkOnly()
+{
+    //  创建互斥量
+    HANDLE m_hMutex  =  CreateMutex(NULL, FALSE,  L"fortest_abc123" );
+    //  检查错误代码
+    if  (GetLastError()  ==  ERROR_ALREADY_EXISTS)  {
+      //  如果已有互斥量存在则释放句柄并复位互斥量
+     CloseHandle(m_hMutex);
+     m_hMutex  =  NULL;
+      //  程序退出
+      return  false;
+    }
+    else
+        return true;
+}
+
+void IpConfig()
+{
+    QProcess *process = new QProcess();
+    //网卡名称
+    QString name = "\"本地连接\" ";
+    QString cmd = "netsh interface ipv4 set address name = " + name + "source = static address = 218.192.162.1 ";
+
+    qDebug()<<"cmd = "<<cmd;
+    process->start(cmd);   //执行dos命令
+    process->waitForFinished(); //等待执行完成
+    delete process;
 }

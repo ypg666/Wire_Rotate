@@ -141,10 +141,17 @@ void LineRotate::init(std::vector<std::vector<int>> params) {
 
 int LineRotate::getRotate(cv::Mat srcImage)
 {
-    getColorMask(srcImage);
-
-    //获取三个颜色区块的信息后根据面积大小和位置信息确定旋转角度
-    getBlockInfo();
+    try {
+        getColorMask(srcImage);
+        getBlockInfo();
+    }
+    catch (const int i) {
+        throw i;
+    }
+    catch (const std::exception& e)
+    {
+        throw -1;
+    }
     float areaList[3] = { yellowgreenBlockAreaSum, blueBlockAreaSum,brownBlockAreaSum };
     float positionList[3] = { yellowgreenBlockPosition,blueBlockPosition,brownBlockPosition };
     float temp[3];
@@ -308,6 +315,9 @@ void LineRotate::getColorMask(cv::Mat & image)
     try
     {
         getRoIImage(image, RoI);
+        cv::imwrite("C:/Users/Administrator/Desktop/test.bmp",image);
+        cv::imwrite("C:/Users/Administrator/Desktop/test1.bmp",RoI);
+        std::cout << "got ROI Block" << std::endl;
     }
     catch (const std::exception& e)
     {
@@ -318,6 +328,11 @@ void LineRotate::getColorMask(cv::Mat & image)
             logHandle << "getRoIImage 函数调用错误 \t 文件已经保存 \t " << errorImageFolder + "/" + std::to_string(tt) + ".bmp" << std::endl;
             logHandle << "Standard exception: " << e.what() << std::endl;
         }
+        throw 1;
+    }
+    catch (const int i)
+    {
+        std::cout << "error 1" << std::endl;
         throw 1;
     }
     cv::cvtColor(RoI, tmp, cv::COLOR_BGR2HSV);
@@ -500,6 +515,13 @@ void LineRotate::getRoIImage(cv::Mat & image, cv::Mat & result)
     cv::reduce(edge3_sobel_y, edge3_sobel_sum, 0, cv::REDUCE_SUM, CV_32S);
     int x_index[2] = {};
     cv::minMaxIdx(edge3_sobel_sum, nullptr, nullptr, nullptr, x_index);
+
+    if(x_index[0] == x_index[1])
+    {
+        std::cout << "没有检测到ROI区域" << std::endl;
+        throw 1;
+    }
+
     cv::Mat end_RoI, end_RoI_sum;
     if (x_index[1] > 30 && dst.cols - x_index[1] > 30)
     {

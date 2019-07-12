@@ -27,8 +27,9 @@ class SysDate
 public:
     SysDate();
     //"/Config.ini"
-    QString filepath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    QString name = "/Config.ini";
+//    QString filepath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QString filepath = "Config.ini";
+//    QString name = "/Config.ini";
     void setpass(QString p);
     QString readpass();
     void setpic(QString p);

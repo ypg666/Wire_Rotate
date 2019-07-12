@@ -55,6 +55,7 @@ public slots:
     void outcome1();    //调试输出角度
     void outcome2(int val);  //直接输出角度
     void set_deflection(int val);  //设置偏转角度
+    void ROI_error(); //算法报错
 private slots:
     void fun(); //开始检测 进入触发模式
     void historyimage();     //历史图像界面

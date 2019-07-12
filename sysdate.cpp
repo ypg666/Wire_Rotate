@@ -2,9 +2,9 @@
 
 QString SysDate::password ="";
 QString SysDate::picnum ="";
-QString SysDate::hisnum ="";
-QString SysDate::curnum ="";
-QString SysDate::deflection ="";
+QString SysDate::hisnum ="0";
+QString SysDate::curnum ="0";
+QString SysDate::deflection ="0";
 
 
 
@@ -67,7 +67,7 @@ int SysDate::read_deflection()
 }
 void SysDate::initFromConfig(){
     QString key;
-    filepath = filepath.append(name);
+    //filepath = filepath.append(name);
     QSettings ini(filepath, QSettings::IniFormat);
     ini.beginGroup(QString("System_Data"));
     key.sprintf("password");
@@ -85,7 +85,7 @@ void SysDate::initFromConfig(){
 
 void SysDate::writeConfig(QString  p,QString  q,QString  z,QString  x,QString  deflection1)
 {
-            filepath = filepath.append(name);
+            //filepath = filepath.append(name);
             QSettings ini(filepath, QSettings::IniFormat);
                 ini.beginGroup(QString("System_Data"));
                 QString key;

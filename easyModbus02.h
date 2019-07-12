@@ -31,7 +31,11 @@ public:
     void sendMsg(int intInput);             //发送整形角度数据
     QByteArray readMsg();                   //接收数据
 
+
+
 private:
+
+    bool hasMatchPort = false;
 
 	QSerialPort serialPort;      //串口类
 	QString serialPortName;      //打开的串口

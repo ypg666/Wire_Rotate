@@ -61,7 +61,7 @@ MainDialog::MainDialog(QWidget *parent) :
     //算法参数初始化
     threeparams.write_params(params);//读算法参数
     lineRotate.init(params);
-    qDebug() << lineRotate.read();
+//    qDebug() << lineRotate.read();
 
     //设置晶体管控件QLCDNumber能显示的位数
     ui->lcdNumber_3->setDigitCount(8);
@@ -97,7 +97,8 @@ MainDialog::MainDialog(QWidget *parent) :
     connect(&w3, SIGNAL(deflection(int)), this, SLOT(set_deflection(int)));
     //更新相机设置和算法计算后的信号槽
     connect(TIS_Camera::Instance(), SIGNAL(ini()), this, SLOT(normal()));
-    connect(Listener1::Instance(), SIGNAL(finish(int)), this, SLOT(show1(int)));
+    connect(Listener1::Instance(), SIGNAL(finish(int)), this, SLOT(show1(int)));;
+    connect(Listener1::Instance(), SIGNAL(no_roi()), this, SLOT(ROI_error()));
 }
 
 MainDialog::~MainDialog()
@@ -114,6 +115,7 @@ void MainDialog::fun()
 {
     if(ui->pushButton->text()==(QString("开始运行")))
     {
+        detect_cam();
         ui->pushButton_3->setEnabled(false);
         ui->pushButton_4->setEnabled(false);
         ui->pushButton_6->setEnabled(false);
@@ -144,16 +146,24 @@ void MainDialog::fun()
 void MainDialog::show1(int l)
 {
     temp = p.read_deflection();
-    if (easymodbus.initSerialPort() > 0)
-    {easymodbus.sendMsg(l+temp);}
-    else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
+
+    try {
+        easymodbus.sendMsg(l+temp);
+    }
+    catch (const int errorcode)
+    {
+//        QMessageBox::warning(NULL,QString("错误"),QString("发送失败,正在检测串口"),QMessageBox::Yes);
+        if (easymodbus.initSerialPort() > 0)
+        {easymodbus.sendMsg(l+temp);}
+        else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
+    }
     ui->lcdNumber_2->display(l);
     ui->lcdNumber->display(l1);
     l1=l;
 
     QString str1=p.readhis();
     int num2 = str1.toInt();  //历史检测数量
-    num1=QString::number(num);  //QString::fromLocal8Bit  QStringLiteral
+    num1=QString::number(num);  //当前检测数量
     if(num != 0)
     {
         num2++;
@@ -195,13 +205,20 @@ void MainDialog::grab1()
 {
     if(cam.Valid())
     {
-    grab_img = cv::imread("imaging.bmp");
+//    grab_img = cv::imread("imaging.bmp");
 
-//    grab_img = cam.GetMatImage();
+    grab_img = cam.GetMatImage(); //不是线材图像的时候会BUG
     cv::flip(grab_img, grab_img, 0);//垂直反转
     threeparams.inputImg = grab_img;
-    if (threeparams.hasInputImg = true )
-    {threeparams.show();}
+    //在这里catch不到
+    try {
+        if (threeparams.hasInputImg = true )
+        {threeparams.show();}
+    }
+    catch (const int errorcode)
+    {
+        QMessageBox::warning(NULL,QString("错误"),QString("图像中无线材"),QMessageBox::Yes);
+    }
 
     cv::imshow("Test", grab_img);
     cv::imwrite("test/grab_img.bmp", grab_img);
@@ -230,16 +247,33 @@ void MainDialog::caculate1() //分步计算
 void MainDialog::outcome1()     //分步输出
 {
     temp = p.read_deflection();
-    if (easymodbus.initSerialPort() > 0)
-    {easymodbus.sendMsg(rotate+temp);}
-    else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
+    try {
+        easymodbus.sendMsg(rotate+temp);
+    }
+    catch (const int errorcode)
+    {
+//        QMessageBox::warning(NULL,QString("错误"),QString("发送失败,正在检测串口"),QMessageBox::Yes);
+        if (easymodbus.initSerialPort() > 0)
+        {easymodbus.sendMsg(rotate+temp);}
+        else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
+    }
+    //if (easymodbus.initSerialPort() > 0)
+    //{easymodbus.sendMsg(rotate+temp);}
+    //else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
 }
 void MainDialog::outcome2(int val)  //直接输出角度
 {
     temp = p.read_deflection();
-    if (easymodbus.initSerialPort() > 0)
-    {easymodbus.sendMsg(val+temp);}
-    else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
+    try {
+        easymodbus.sendMsg(val+temp);
+    }
+    catch (const int errorcode)
+    {
+//        QMessageBox::warning(NULL,QString("错误"),QString("发送失败,正在检测串口"),QMessageBox::Yes);
+        if (easymodbus.initSerialPort() > 0)
+        {easymodbus.sendMsg(val+temp);}
+        else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
+    }
 }
 void MainDialog::set_deflection(int val)  //设置偏转角度  需要写到数据类里
 {
@@ -283,6 +317,10 @@ void MainDialog::detect_cam()
         else if (mess == 1 )
         {}
     }
+}
+void MainDialog::ROI_error()
+{
+    QMessageBox::information(this,QString("错误"),QString("图像中没有线材"),QMessageBox::Yes);
 }
 //别的图像显示方式（没用到）
 
