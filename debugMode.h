@@ -1,3 +1,16 @@
+/*********************************************************************************
+  *Copyright(C)
+  *ClassName:  debugMode
+  *Author:  佳豪
+  *Version: 1.0
+  *Date:  2019.7.12
+  *Description: 调试窗口
+                直接show
+                在对应调试步骤的回调里加入信号量
+  *Others:  //其他内容说明
+  *Function List:  //主要函数列表，每条记录应包含函数名及功能简要说明
+  *History:  加入了一些信号量  2019.7.12 璞光
+**********************************************************************************/
 #pragma once
 
 #include <QtWidgets/QDialog>
@@ -23,7 +36,7 @@ private:
 private:
 	// 状态指示灯
 	int numberOfLight = 3;
-	std::vector<stateWidget *> vStateWidget;
+    std::vector<stateWidget *> vStateWidget; //定义对象的数组
 	int stateNumber = 0;
 
 signals:

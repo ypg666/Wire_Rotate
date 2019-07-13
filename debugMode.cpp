@@ -15,7 +15,7 @@ debugMode::debugMode(QWidget *parent)
 		vStateWidget.at(i) = new stateWidget();
 	}
 
-	vStateWidget.at(0) = dynamic_cast<stateWidget*>(ui.wd_cameraGrabber);
+    vStateWidget.at(0) = dynamic_cast<stateWidget*>(ui.wd_cameraGrabber); //dynamic_cast将基类的指针安全地转换成派生类的指针
 	vStateWidget.at(1) = dynamic_cast<stateWidget*>(ui.wd_calculateDegree);
 	vStateWidget.at(2) = dynamic_cast<stateWidget*>(ui.wd_outputDegree);
 

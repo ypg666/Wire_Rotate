@@ -47,21 +47,15 @@ SOURCES += \
     sys.cpp \
     sysdate.cpp \
     debugMode.cpp \
-    writeregistermodel.cpp \
-    mainwindow.cpp \
-    settingsdialog.cpp \
     debugMode.cpp \
     historyimage.cpp \
     keyboard.cpp \
     Listener1.cpp \
     main.cpp \
     maindialog.cpp \
-    mainwindow.cpp \
     password.cpp \
-    settingsdialog.cpp \
     sys.cpp \
     sysdate.cpp \
-    writeregistermodel.cpp \
     TIS_Camera.cpp \
     lineRotate.cpp \
     easyModbus02.cpp \
@@ -91,9 +85,6 @@ HEADERS += \
     sysdate.h \
     TIS_Camera.h \
     debugMode.h \
-    writeregistermodel.h \
-    mainwindow.h \
-    settingsdialog.h \
     include/AnalogChannelItem.h \
     include/AviSink.h \
     include/Codec.h \
@@ -150,14 +141,11 @@ HEADERS += \
     keyboard.h \
     Listener1.h \
     maindialog.h \
-    mainwindow.h \
     msvc_macro.h \
     password.h \
-    settingsdialog.h \
     sys.h \
     sysdate.h \
     TIS_Camera.h \
-    writeregistermodel.h \
     LineRotate.h \
     CRC16.h \
     easyModbus02.h \
@@ -175,7 +163,6 @@ FORMS += \
     sys.ui \
     debugMode.ui \
     mainwindow.ui \
-    settingsdialog.ui \
     adjustparameters.ui \
     threeparams.ui
 

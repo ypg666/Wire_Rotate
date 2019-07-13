@@ -1,4 +1,17 @@
-﻿#include "maindialog.h"
+﻿/*********************************************************************************
+  *Copyright(C)
+  *ClassName:  main
+  *Author:  璞光
+  *Version: 1.0
+  *Date:  2019.7.12
+  *Description: main启动函数
+  *Others:   命令行不同指令启动，测试没反应，还没找到原因
+  *Function List:  appAutoRun(bool bAutoRun) //写入注册表自启
+  *                bool checkOnly(); //判断是否重复启动，返回false重复启动
+  *                void IpConfig(); //设置本机IP（与网口相机匹配）
+  *History:  //修改历史记录列表，每条修改记录应包含修改日期、修改者及修改内容简介
+**********************************************************************************/
+#include "maindialog.h"
 #include <QFile>
 #include <QApplication>
 #include <windows.h>
@@ -90,7 +103,7 @@ void IpConfig()
 {
     QProcess *process = new QProcess();
     //网卡名称
-    QString name = "\"本地连接\" ";
+    QString name = "\"以太网\" ";
     QString cmd = "netsh interface ipv4 set address name = " + name + "source = static address = 218.192.162.1 ";
 
     qDebug()<<"cmd = "<<cmd;

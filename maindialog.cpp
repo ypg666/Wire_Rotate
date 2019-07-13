@@ -17,7 +17,7 @@ MainDialog::MainDialog(QWidget *parent) :
     //ui->pushButton->setStyleSheet(“border-image:url(me.png)”); 按钮添加背景图片
     ui->pushButton->setText(QString("开始运行"));
 
-    //毛玻璃透明度效果 （未实现）
+    //毛玻璃透明度效果 （未实现） 会与背景图片冲突
     if (QtWin::isCompositionEnabled())
     {
         QtWin::extendFrameIntoClientArea(this, -1, -1, -1, -1);
@@ -32,12 +32,9 @@ MainDialog::MainDialog(QWidget *parent) :
         this->setStyleSheet(QString("widget { background: %1; }").arg(QtWin::realColorizationColor().name()));
     }
 
-    //利用painEvent显示，会卡顿
-//    ca =new CameraDisplay(20,this);
-//    ui->horizontalLayout->addWidget(ca);
-
-    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    qDebug() << QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    //USER目录调试
+    //qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    //qDebug() << QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
 
     //左状态栏 右状态栏
     ui->label_8->setText("欢迎使用！");
@@ -45,13 +42,12 @@ MainDialog::MainDialog(QWidget *parent) :
                          "地址：XXXXXX   "
                          "电话：XXXXXX   ");
 
+    //开机检测相机和串口
+    detect_IO();
     //调用开启相机自带的窗口
     cam.Camera(ui->widget);
-//    cam.Trigger(ui->widget);
-
-    //开机检测相机和串口
     detect_cam();
-    detect_IO();
+
 
     if(easymodbus.initSerialPort() > 0)  //串口初始化
     {
@@ -61,7 +57,6 @@ MainDialog::MainDialog(QWidget *parent) :
     //算法参数初始化
     threeparams.write_params(params);//读算法参数
     lineRotate.init(params);
-//    qDebug() << lineRotate.read();
 
     //设置晶体管控件QLCDNumber能显示的位数
     ui->lcdNumber_3->setDigitCount(8);
@@ -75,10 +70,6 @@ MainDialog::MainDialog(QWidget *parent) :
     timer->setInterval(1000);
     //启动定时器
     timer->start();
-
-//    QImage *img=new QImage("./00.jpg");
-//    QPixmap pixmap("00.jpg");
-//    ui->label_7->setPixmap(pixmap);
 
     //slot
     //主界面按钮信号槽
@@ -98,6 +89,7 @@ MainDialog::MainDialog(QWidget *parent) :
     //更新相机设置和算法计算后的信号槽
     connect(TIS_Camera::Instance(), SIGNAL(ini()), this, SLOT(normal()));
     connect(Listener1::Instance(), SIGNAL(finish(int)), this, SLOT(show1(int)));;
+    //回调时算法报错的信号槽
     connect(Listener1::Instance(), SIGNAL(no_roi()), this, SLOT(ROI_error()));
 }
 
@@ -142,11 +134,16 @@ void MainDialog::fun()
     }
 
 }
-//显示函数  输入：l为旋转角度 直接modbus输出 并且在对应界面显示角度 并增加检测数量
+//显示函数  输入：l为旋转角度 与偏转角度相加 后modbus输出 并且在对应界面显示角度 并增加检测数量
 void MainDialog::show1(int l)
 {
     temp = p.read_deflection();
 
+    if (l+temp > 180 || l+temp < -180)
+    {
+        QMessageBox::warning(NULL,QString("错误"),QString("加入偏转角度后超出范围"),QMessageBox::Yes);
+        return;
+    }
     try {
         easymodbus.sendMsg(l+temp);
     }
@@ -205,15 +202,20 @@ void MainDialog::grab1()
 {
     if(cam.Valid())
     {
-//    grab_img = cv::imread("imaging.bmp");
-
+    //grab_img = cv::imread("imaging.bmp");
+    //直接传图会出错 ， 存图再读图不报错
     grab_img = cam.GetMatImage(); //不是线材图像的时候会BUG
     cv::flip(grab_img, grab_img, 0);//垂直反转
+    cv::imwrite("grab_img.bmp", grab_img);
+    grab_img = cv::imread("grab_img.bmp");
     threeparams.inputImg = grab_img;
     //在这里catch不到
     try {
         if (threeparams.hasInputImg = true )
-        {threeparams.show();}
+        {
+            // threeparams.hasInputImg = false;
+            threeparams.show();
+        }
     }
     catch (const int errorcode)
     {
@@ -221,7 +223,7 @@ void MainDialog::grab1()
     }
 
     cv::imshow("Test", grab_img);
-    cv::imwrite("test/grab_img.bmp", grab_img);
+    //cv::imwrite("test/grab_img.bmp", grab_img);
 }
     else {
         QMessageBox::warning(NULL,QString("错误"),QString("相机未连接"),QMessageBox::Yes);
@@ -247,8 +249,14 @@ void MainDialog::caculate1() //分步计算
 void MainDialog::outcome1()     //分步输出
 {
     temp = p.read_deflection();
+    if (rotate+temp > 180 || rotate+temp < -180)
+    {
+        QMessageBox::warning(NULL,QString("错误"),QString("加入偏转角度后超出范围"),QMessageBox::Yes);
+        return;
+    }
     try {
         easymodbus.sendMsg(rotate+temp);
+        QMessageBox::warning(NULL,QString("成功"),QString("设置成功"),QMessageBox::Yes);
     }
     catch (const int errorcode)
     {
@@ -264,14 +272,23 @@ void MainDialog::outcome1()     //分步输出
 void MainDialog::outcome2(int val)  //直接输出角度
 {
     temp = p.read_deflection();
+    if (val+temp > 180 || val+temp < -180)
+    {
+        QMessageBox::warning(NULL,QString("错误"),QString("加入偏转角度后超出范围"),QMessageBox::Yes);
+        return;
+    }
     try {
         easymodbus.sendMsg(val+temp);
+        QMessageBox::warning(NULL,QString("成功"),QString("设置成功"),QMessageBox::Yes);
     }
     catch (const int errorcode)
     {
 //        QMessageBox::warning(NULL,QString("错误"),QString("发送失败,正在检测串口"),QMessageBox::Yes);
         if (easymodbus.initSerialPort() > 0)
-        {easymodbus.sendMsg(val+temp);}
+        {
+            easymodbus.sendMsg(val+temp);
+        QMessageBox::warning(NULL,QString("成功"),QString("设置成功"),QMessageBox::Yes);
+        }
         else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
     }
 }

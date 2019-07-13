@@ -1,4 +1,17 @@
-﻿#ifndef MAINDIALOG_H
+﻿/*********************************************************************************
+  *Copyright(C)
+  *ClassName:  MainDialog
+  *Author:  璞光
+  *Version: 1.0
+  *Date:  2019.7.12
+  *Description: 主逻辑界面
+  *             详细注释在对应cpp中
+  *Others:  有些类实例化命名的方式太不规范，导致后面分不清谁是谁，祖传代码懒得改了
+  *         后续可能通过再开一个线程块解决串口初始化稍有卡顿的问题
+  *Function List:  //主要函数列表，每条记录应包含函数名及功能简要说明
+  *History:  //修改历史记录列表，每条修改记录应包含修改日期、修改者及修改内容简介
+**********************************************************************************/
+#ifndef MAINDIALOG_H
 #define MAINDIALOG_H
 
 #include "msvc_macro.h"
@@ -6,14 +19,12 @@
 #include "password.h"
 #include "cameradisplay.h"
 #include "debugMode.h"
-#include "mainwindow.h"
 #include "TIS_Camera.h"
 #include "Listener1.h"//回调头文件
 #include "LineRotate.h"
 #include "easyModbus02.h"
 #include "sysdate.h"
 #include "threeparams.h" //算法调参
-//#include "paramsetting.h" //算法参数数据类
 #include <QDialog>
 #include <QTimer>
 #include <QTime>
@@ -37,16 +48,12 @@ public:
     HistoryImage w1;  //历史图像窗口
     Password w2;    //密码窗口
     debugMode w3; //调试窗口
-//    MainWindow w4;
-//    CameraDisplay *ca;
     DShowLib::Grabber *pGrabber; //抓图
     TIS_Camera cam; //相机
-//    Listener1 *pListener1; //回调对象
     easyModbus2 easymodbus;
     LineRotate lineRotate; //算法
     SysDate p; //系统参数数据类
     threeParams threeparams;//算法调参
-//    ParamSetting fileReader; //算法参数数据类
 public slots:
     void normal(); //实时显示图像
     void show1(int l);  //  算法处理完成后续主界面显示处理
@@ -68,11 +75,9 @@ private:
     QTimer *timer; //时间
     int num=0;  //本次检测数量
     QString num1; //本次检测数量的显示值
-    //int i=10;  //已无用
     int l1;  //上次检测角度
     Mat grab_img; //抓图
     int rotate = 0; //调试时的检测角度
-    //int easy = 0; //串口检测flag  小于0失败 大于0成功  用不到了 直接把类里的方法拿出来
     int temp =0;//偏转角度临时计算
 
     void detect_IO();//检测串口连接

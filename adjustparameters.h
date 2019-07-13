@@ -1,3 +1,15 @@
+/*********************************************************************************
+  *Copyright(C)
+  *ClassName:  AdjustParameters
+  *Author:  佳豪
+  *Version: 1.0
+  *Date:  2019.7.12
+  *Description: 算法参数调整窗口
+  *Others:  //其他内容说明
+  *Function List:  //主要函数列表，每条记录应包含函数名及功能简要说明
+  *History:
+  *
+**********************************************************************************/
 #ifndef ADJUSTPARAMETERS_H
 #define ADJUSTPARAMETERS_H
 
@@ -12,6 +24,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "ClassThresholdTools.h"
+#include <QMessageBox>
 
 namespace Ui {
 class AdjustParameters;

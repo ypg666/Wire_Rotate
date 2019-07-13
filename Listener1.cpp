@@ -114,7 +114,7 @@ void	Listener1::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
 //        QMessageBox::information(this,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图像中没有线材"),QMessageBox::Yes);
 
         emit no_roi();
-//        return;
+        return;
 
         //        std::cout << "ERROR CODE: "<< errorcode << std::endl;
     }

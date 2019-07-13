@@ -1,4 +1,20 @@
-﻿#pragma once
+﻿/*********************************************************************************
+  *Copyright(C)
+  *ClassName:  stateWidget
+  *Author:  佳豪
+  *Version: 1.0
+  *Date:  2019.7.12
+  *Description: 调试窗口状态指示灯的Widget
+  *             直接在.ui里创建Widget提升实现
+  *             在这里可以设置初始颜色
+  *Others:  //其他内容说明
+  *Function List:  QColor m_color =  //设置指示灯开启的颜色
+  *                turnOn() //指示灯开启
+  *                随后指示灯对象调用update()更新状态
+  *History:
+  *
+**********************************************************************************/
+#pragma once
 
 #include <QWidget>
 #include <QPushButton>

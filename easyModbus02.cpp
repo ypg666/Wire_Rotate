@@ -12,7 +12,7 @@ easyModbus2::~easyModbus2()
     serialPort.close();
 }
 
-int easyModbus2::initSerialPort()
+int easyModbus2::initSerialPort2()
 {
     this->hasMatchPort = false;
     QStringList mPortNameList;  //串口列表
@@ -64,6 +64,60 @@ int easyModbus2::initSerialPort()
     }
     return -1;
 }
+
+int easyModbus2::initSerialPort()
+{
+    this->hasMatchPort = false;
+    QStringList mPortNameList;  //串口列表
+    QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
+    if (!portList.empty()) {
+        foreach(const QSerialPortInfo &info, portList)
+        {
+            // qDebug() << "SerialPortList:";
+            mPortNameList.push_back(info.portName());
+            // qDebug() << "    SerialPortName:" << info.portName();
+        }
+
+        for(auto sPortName:mPortNameList){
+            this->serialPortName = sPortName;
+            serialPort.setPortName(serialPortName);
+            serialPort.setBaudRate(QSerialPort::Baud9600);           //设置波特率和读写方向
+            serialPort.setDataBits(QSerialPort::Data7);              //数据位为8位
+            serialPort.setFlowControl(QSerialPort::NoFlowControl);   //无流控制
+            serialPort.setParity(QSerialPort::EvenParity);           //无校验位
+            serialPort.setStopBits(QSerialPort::OneStop);            //一位停止位
+            if (serialPort.isOpen())                                 //如果串口已经打开了 先给他关闭了
+            {
+                serialPort.clear();
+                serialPort.close();
+            }
+
+            if (!serialPort.open(QIODevice::ReadWrite))              //用ReadWrite 的模式尝试打开串口
+            {
+                continue;
+            }
+            else
+            {
+                // ===== Matching Serial Port ======= //
+                sendMsg(this->matchMessageAA2);
+                QByteArray receiveByte = readMsg();
+                QString receivedMsg = receiveByte.toHex();
+                if (receivedMsg.size() == 30)
+                {
+                    this->hasMatchPort = true;
+                    // qDebug() << QObject::tr("Successful Opening of Serial Port: %1").arg(this->serialPortName) << endl;
+                    return 1;
+                }
+            }
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    return -1;
+}
+
 
 void easyModbus2::sendMsg(QString input)
 {

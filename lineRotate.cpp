@@ -159,7 +159,7 @@ int LineRotate::getRotate(cv::Mat srcImage)
     std::sort(temp, temp + 3);
     if (temp[2] > 2 * (temp[0] + temp[1]))
     {
-        throw "发生错误！请使用debug模式";
+        throw 3;
     }
     else 
     {
@@ -315,9 +315,9 @@ void LineRotate::getColorMask(cv::Mat & image)
     try
     {
         getRoIImage(image, RoI);
-        cv::imwrite("C:/Users/Administrator/Desktop/test.bmp",image);
-        cv::imwrite("C:/Users/Administrator/Desktop/test1.bmp",RoI);
-        std::cout << "got ROI Block" << std::endl;
+//        cv::imwrite("C:/Users/Administrator/Desktop/test.bmp",image);
+//        cv::imwrite("C:/Users/Administrator/Desktop/test1.bmp",RoI);
+//        std::cout << "got ROI Block" << std::endl;
     }
     catch (const std::exception& e)
     {

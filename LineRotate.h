@@ -1,4 +1,21 @@
-﻿#pragma once
+﻿/*********************************************************************************
+  *Copyright(C)
+  *ClassName:  LineRotate
+  *Author:  昊杰
+  *Version: 1.0
+  *Date:  2019.7.12
+  *Description: 检测算法类
+                先init(std::vector<std::vector<int>> params) 输入算法参数初始化
+                int getRotate(cv::Mat srcImage);输入图片输出角度，注意catch错误
+                重载int getRotate(cv::Mat srcImage, bool debug, std::string debugFilePath) 可以调试模式生产错误日志
+                void clearTempData()清除临时数据
+  *Others:  //其他内容说明
+  *Function List:  //主要函数列表，每条记录应包含函数名及功能简要说明
+  *History:
+  *         将存放算法参数的thresholdValue结构体改为了静态变量，使主逻辑中的调试计算和回调中的计算两个对象
+  *         通过一个初始化函数得到同样的算法参数。  // 2019.7.12  璞光
+**********************************************************************************/
+#pragma once
 #define _USE_MATH_DEFINES
 #include <iostream>
 #include <opencv2\opencv.hpp>

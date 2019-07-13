@@ -152,7 +152,14 @@ void AdjustParameters::setInDisplay(cv::Mat inputImg)
     ui->inDisplay->setPixmap(inputImg2);
 
     cv::Mat resultImg;
+    try{
     thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
+    }
+    catch (const int errorcode)
+    {
+        QMessageBox::warning(NULL,QString("错误"),QString("图像中无线材"),QMessageBox::Yes);
+    }
+    // resultImg = inputImg;
     cv::resize(resultImg, resultImg, cv::Size(setWidth, setHeight));
     image = cvMat2QImage(resultImg);
     QPixmap resultImg2 = QPixmap::fromImage(image);
@@ -249,7 +256,14 @@ void AdjustParameters::updateParamValue()
 //            qDebug() << QString::fromLocal8Bit("棕色通道参数调整") << endl;
 
 //        }
-        thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
+        try{
+             thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
+        }
+        catch (const int errorcode)
+        {
+            QMessageBox::warning(NULL,QString("错误"),QString("图像中无线材"),QMessageBox::Yes);
+        }
+        // thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
         cv::resize(resultImg, resultImg, cv::Size(setWidth, setHeight));
         QImage image = cvMat2QImage(resultImg);
         QPixmap resultImg2 = QPixmap::fromImage(image);
