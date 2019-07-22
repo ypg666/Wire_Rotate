@@ -139,6 +139,60 @@ void LineRotate::init(std::vector<std::vector<int>> params) {
     thresholdValue_struct.brown_cb_max = params[3][9];
 }
 
+void LineRotate::init(std::vector<int> params, int flag) {
+    assert(params.size() == 10);
+    if(flag == 1){
+        thresholdValue_struct.blue_h_min = params[0];
+        thresholdValue_struct.blue_h_max = params[1];
+        thresholdValue_struct.blue_s_min = params[2];
+        thresholdValue_struct.blue_s_max = params[3];
+        thresholdValue_struct.blue_v_min = params[4];
+        thresholdValue_struct.blue_v_max = params[5];
+        thresholdValue_struct.blue_cr_min = params[6];
+        thresholdValue_struct.blue_cr_max = params[7];
+        thresholdValue_struct.blue_cb_min = params[8];
+        thresholdValue_struct.blue_cb_max = params[9];
+    }
+    else if(flag == 2){
+        thresholdValue_struct.green_h_min = params[0];
+        thresholdValue_struct.green_h_max = params[1];
+        thresholdValue_struct.green_s_min = params[2];
+        thresholdValue_struct.green_s_max = params[3];
+        thresholdValue_struct.green_v_min = params[4];
+        thresholdValue_struct.green_v_max = params[5];
+        thresholdValue_struct.green_cr_min = params[6];
+        thresholdValue_struct.green_cr_max = params[7];
+        thresholdValue_struct.green_cb_min = params[8];
+        thresholdValue_struct.green_cb_max = params[9];
+    }
+    else if(flag == 3){
+        thresholdValue_struct.yellow_h_min = params[0];
+        thresholdValue_struct.yellow_h_max = params[1];
+        thresholdValue_struct.yellow_s_min = params[2];
+        thresholdValue_struct.yellow_s_max = params[3];
+        thresholdValue_struct.yellow_v_min = params[4];
+        thresholdValue_struct.yellow_v_max = params[5];
+        thresholdValue_struct.yellow_cr_min = params[6];
+        thresholdValue_struct.yellow_cr_max = params[7];
+        thresholdValue_struct.yellow_cb_min = params[8];
+       thresholdValue_struct.yellow_cb_max = params[9];
+}
+    else if(flag == 4){
+        thresholdValue_struct.brown_h_min = params[0];
+        thresholdValue_struct.brown_h_max = params[1];
+        thresholdValue_struct.brown_s_min = params[2];
+        thresholdValue_struct.brown_s_max = params[3];
+        thresholdValue_struct.brown_v_min = params[4];
+        thresholdValue_struct.brown_v_max = params[5];
+        thresholdValue_struct.brown_cr_min = params[6];
+        thresholdValue_struct.brown_cr_max = params[7];
+        thresholdValue_struct.brown_cb_min = params[8];
+        thresholdValue_struct.brown_cb_max = params[9];
+    }
+
+}
+
+
 int LineRotate::getRotate(cv::Mat srcImage)
 {
     try {

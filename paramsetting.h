@@ -32,7 +32,6 @@ public:
     void readIni(QString param, std::vector<int> &value);
 
 
-
 private:
     //const QString filepath ="paramSetting.ini";
     QString filepath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);

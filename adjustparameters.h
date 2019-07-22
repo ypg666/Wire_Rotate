@@ -62,6 +62,8 @@ private:
 private:
     Ui::AdjustParameters *ui;
 
+    LineRotate lineRotate; //Ëã·¨
+
     QString winTitle = "";
 
     std::vector<int> paramMax;

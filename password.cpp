@@ -40,8 +40,8 @@ void Password::on_loginBtn_clicked()
     if (ui->lineEdit->text() == q && flag ==0)
     {
         ui->lineEdit->clear();
-        w3.show();
         this->close();
+        w3.exec();
     }
     else if (ui->lineEdit->text() == q && flag ==1)
     {

@@ -7,6 +7,8 @@ threeParams::threeParams(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this -> setWindowFlags(Qt::WindowCloseButtonHint); //Òş²Ø±êÌâÀ¸ÎÊºÅ
+
     wd_AP = new AdjustParameters(this);
     connect(this, &threeParams::paramMinChanged, wd_AP, &AdjustParameters::setParamMin);
     connect(this, &threeParams::paramMaxChanged, wd_AP, &AdjustParameters::setParamMax);

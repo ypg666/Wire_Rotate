@@ -3,8 +3,9 @@
 
 void ParamSetting::writeIni(QString param, std::vector<int> value)
 {
-    filepath = filepath.append(name);
-    QSettings ini(this->filepath, QSettings::IniFormat);
+    QString tempFilePath = filepath;
+    tempFilePath = tempFilePath.append(name);
+    QSettings ini(tempFilePath, QSettings::IniFormat);
     ini.beginGroup(param);
     std::vector<QString> keyStr = {"Hmin", "Hmax", "Smin", "Smax", "Vmin", "Vmax", "Crmin", "Crmax", "Cbmin", "Cbmax"};
     for(int i = 0; i < 10; i++){
@@ -17,9 +18,9 @@ void ParamSetting::writeIni(QString param, std::vector<int> value)
 
 void ParamSetting::readIni(QString param, std::vector<int> &value)
 {
-
-    filepath = filepath.append(name);
-    QSettings ini(this->filepath, QSettings::IniFormat);
+    QString tempFilePath = filepath;
+    tempFilePath = tempFilePath.append(name);
+    QSettings ini(tempFilePath, QSettings::IniFormat);
 
     QStringList strList = ini.childGroups();
 

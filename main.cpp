@@ -111,3 +111,13 @@ void IpConfig()
     process->waitForFinished(); //等待执行完成
     delete process;
 }
+//自动关机
+//void AutoClose()
+//{
+//    QProcess pro;    //通过QProcess类来执行第三方程序
+//    QString cmd = QString("shutdown -s -t 0"); //shutdown -s -t 0 是window下的关机命令，
+
+//    pro.start(cmd);    //执行命令cmd
+//    pro.waitForStarted();
+//    pro.waitForFinished();
+//}

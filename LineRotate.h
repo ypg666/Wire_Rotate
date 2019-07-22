@@ -81,6 +81,7 @@ public:
     LineRotate();
     ~LineRotate();
     void init(std::vector<std::vector<int>> params);
+    void init(std::vector<int> params, int flag);
     int getRotate(cv::Mat srcImage);
     int getRotate(cv::Mat srcImage, bool debug, std::string debugFilePath);
     inline void clearTempData() {

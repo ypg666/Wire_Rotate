@@ -30,8 +30,11 @@ void ClassThresholdTools::getThresholdResult(cv::Mat src, cv::Mat & dst, std::ve
     }
     catch (const std::exception& e)
     {
+
         std::cout << "获取图片的ROI区域失败" << std::endl;
         throw 1;
+        // dst = cv::Mat(src.rows,src.cols, CV_8UC3, cv::Scalar(0, 0, 255));
+        return;
     }
     ROIImage.copyTo(src);
 

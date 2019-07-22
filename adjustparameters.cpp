@@ -6,6 +6,8 @@ AdjustParameters::AdjustParameters(QWidget *parent) :
     ui(new Ui::AdjustParameters)
 {
     ui->setupUi(this);
+   //this->setWindowFlags(Qt::WindowCloseButtonHint); //隐藏标题栏问号
+
     paramMin.resize(10);
     paramMax.resize(10);
     paramDefault.resize(10);
@@ -153,11 +155,12 @@ void AdjustParameters::setInDisplay(cv::Mat inputImg)
 
     cv::Mat resultImg;
     try{
-    thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
+        thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
     }
     catch (const int errorcode)
     {
-        QMessageBox::warning(NULL,QString("错误"),QString("图像中无线材"),QMessageBox::Yes);
+        QMessageBox::warning(NULL,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图像中无线材"),QMessageBox::Yes);
+        resultImg = cv::Mat(this->inputImage.rows, this->inputImage.cols, CV_8UC3, cv::Scalar(0, 0, 255));
     }
     // resultImg = inputImg;
     cv::resize(resultImg, resultImg, cv::Size(setWidth, setHeight));
@@ -170,31 +173,38 @@ void AdjustParameters::setInDisplay(cv::Mat inputImg)
 
 void AdjustParameters::on_saveParams_clicked()
 {
+    int flag = 0;
     //qDebug() << winTitle << endl;
     if(winTitle == QString::fromLocal8Bit("蓝色通道参数调整")){
         ParamSetting paramSet;
         QString str;
         str.sprintf("Blue");
         paramSet.writeIni(str, paramValue);
+        flag = 1;
     }
     else if(winTitle == QString::fromLocal8Bit("绿色通道参数调整")){
         ParamSetting paramSet;
         QString str;
         str.sprintf("Green");
         paramSet.writeIni(str, paramValue);
+        flag = 2;
     }
     else if(winTitle == QString::fromLocal8Bit("黄色通道参数调整")){
         ParamSetting paramSet;
         QString str;
         str.sprintf("Yellow");
         paramSet.writeIni(str, paramValue);
+        flag = 3;
     }
     else if(winTitle == QString::fromLocal8Bit("棕色通道参数调整")){
         ParamSetting paramSet;
         QString str;
         str.sprintf("Brown");
         paramSet.writeIni(str, paramValue);
+        flag = 4;
     }
+    QMessageBox::warning(NULL,QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("参数保存成功"), QMessageBox::Yes);
+    lineRotate.init(paramValue, flag);
 }
 
 void AdjustParameters::on_resetParams_clicked()
@@ -257,11 +267,12 @@ void AdjustParameters::updateParamValue()
 
 //        }
         try{
-             thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
+            thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
         }
         catch (const int errorcode)
         {
-            QMessageBox::warning(NULL,QString("错误"),QString("图像中无线材"),QMessageBox::Yes);
+            // QMessageBox::warning(NULL,QString::fromLocal8Bit("错误"),QString::fromLocal8Bit("图像中无线材"),QMessageBox::Yes);
+            resultImg = cv::Mat(this->inputImage.rows, this->inputImage.cols, CV_8UC3, cv::Scalar(0, 0, 255));
         }
         // thresholdTools.getThresholdResult(this->inputImage, resultImg, paramValue);
         cv::resize(resultImg, resultImg, cv::Size(setWidth, setHeight));

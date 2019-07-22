@@ -38,7 +38,7 @@ void stateWidget::paintEvent(QPaintEvent *)
 
 	// 放弃以下面这种方式添加字体 -- 不知为何会出现乱码
 	QFont font;
-	font.setFamily("宋体");
+    font.setFamily("微软雅黑");
 	// 大小
 	font.setPointSize(16);
 	// 斜体
@@ -50,7 +50,7 @@ void stateWidget::paintEvent(QPaintEvent *)
 	// 设置字母大小写
 	//font.setCapitalization(QFont::SmallCaps);
 	// 设置字符间距
-	font.setLetterSpacing(QFont::AbsoluteSpacing, 10);
+    font.setLetterSpacing(QFont::AbsoluteSpacing, 2);
 	painter.setFont(font);
 	painter.setPen(Qt::white);
 	//lightTextStr = QString::fromLocal8Bit(lightText);

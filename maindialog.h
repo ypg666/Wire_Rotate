@@ -31,6 +31,7 @@
 #include <QStatusBar>
 #include <QtWin>
 #include <QMessageBox>
+#include <QProcess>
 
 //#define image_path "C:/Users/Administrator/Desktop/1/"  //存放图片的路径
 namespace Ui {
@@ -70,6 +71,7 @@ private slots:
     void password();    //系统设置
     void password1();   //相机设置
     void onTimerOut();  //时钟
+    void AutoClose(); //自动关机
 private:
     Ui::MainDialog *ui;
     QTimer *timer; //时间

@@ -38,7 +38,7 @@ MainDialog::MainDialog(QWidget *parent) :
 
     //左状态栏 右状态栏
     ui->label_8->setText("欢迎使用！");
-    ui->label_9->setText("华南理工大学   "
+    ui->label_9->setText("爱博机器人   "
                          "地址：XXXXXX   "
                          "电话：XXXXXX   ");
 
@@ -77,7 +77,7 @@ MainDialog::MainDialog(QWidget *parent) :
     connect(ui->pushButton_3, SIGNAL(clicked(bool)), this, SLOT(debug()));
     connect(ui->pushButton_4, SIGNAL(clicked(bool)), this, SLOT(password()));
     connect(ui->pushButton_6, SIGNAL(clicked(bool)), this, SLOT(password1()));
-    connect(ui->pushButton_8, SIGNAL(clicked(bool)), this, SLOT(close()));
+    connect(ui->pushButton_8, SIGNAL(clicked(bool)), this, SLOT(AutoClose()));
     connect(ui->pushButton_7, SIGNAL(clicked(bool)), this, SLOT(historyimage()));
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerOut()));
     //调试窗口的信号槽
@@ -137,7 +137,8 @@ void MainDialog::fun()
 //显示函数  输入：l为旋转角度 与偏转角度相加 后modbus输出 并且在对应界面显示角度 并增加检测数量
 void MainDialog::show1(int l)
 {
-    temp = p.read_deflection();
+    int symbol = l / (abs(l));
+    temp = symbol * p.read_deflection();
 
     if (l+temp > 180 || l+temp < -180)
     {
@@ -154,9 +155,9 @@ void MainDialog::show1(int l)
         {easymodbus.sendMsg(l+temp);}
         else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
     }
-    ui->lcdNumber_2->display(l);
+    ui->lcdNumber_2->display(l+temp);
     ui->lcdNumber->display(l1);
-    l1=l;
+    l1=l+temp;
 
     QString str1=p.readhis();
     int num2 = str1.toInt();  //历史检测数量
@@ -178,24 +179,25 @@ void MainDialog::show1(int l)
 void MainDialog::historyimage()
 {
     w1.hisupdate();
-    w1.show();
+    w1.exec();
 }
 //调试界面
 void MainDialog::debug()
 {
-    w3.show();
+    w3.exec();
 }
 //系统设置
 void MainDialog::password()
 {
     w2.setflag(0);
-    w2.show();
+    //w2.show();
+    w2.exec();
 }
 //相机设置
 void MainDialog::password1()
 {
     w2.setflag(1);
-    w2.show();
+    w2.exec();
 }
 //调试窗口抓图
 void MainDialog::grab1()
@@ -222,8 +224,8 @@ void MainDialog::grab1()
         QMessageBox::warning(NULL,QString("错误"),QString("图像中无线材"),QMessageBox::Yes);
     }
 
-    cv::imshow("Test", grab_img);
-    //cv::imwrite("test/grab_img.bmp", grab_img);
+//    cv::imshow("Test", grab_img);
+    cv::imwrite("test/grab_img.bmp", grab_img);
 }
     else {
         QMessageBox::warning(NULL,QString("错误"),QString("相机未连接"),QMessageBox::Yes);
@@ -234,7 +236,7 @@ void MainDialog::caculate1() //分步计算
     try {
         //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
         rotate = lineRotate.getRotate(grab_img);
-        qDebug() << rotate;
+        //qDebug() << rotate;
         //lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
     }
     catch (const int errorcode)
@@ -248,7 +250,9 @@ void MainDialog::caculate1() //分步计算
 }
 void MainDialog::outcome1()     //分步输出
 {
-    temp = p.read_deflection();
+    int symbol = rotate / (abs(rotate));
+    temp = symbol * p.read_deflection();
+
     if (rotate+temp > 180 || rotate+temp < -180)
     {
         QMessageBox::warning(NULL,QString("错误"),QString("加入偏转角度后超出范围"),QMessageBox::Yes);
@@ -271,7 +275,9 @@ void MainDialog::outcome1()     //分步输出
 }
 void MainDialog::outcome2(int val)  //直接输出角度
 {
-    temp = p.read_deflection();
+    int symbol = val / (abs(val));
+    temp = symbol * p.read_deflection();
+
     if (val+temp > 180 || val+temp < -180)
     {
         QMessageBox::warning(NULL,QString("错误"),QString("加入偏转角度后超出范围"),QMessageBox::Yes);
@@ -291,6 +297,7 @@ void MainDialog::outcome2(int val)  //直接输出角度
         }
         else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
     }
+    qDebug() << val+temp << endl ;
 }
 void MainDialog::set_deflection(int val)  //设置偏转角度  需要写到数据类里
 {
@@ -338,6 +345,25 @@ void MainDialog::detect_cam()
 void MainDialog::ROI_error()
 {
     QMessageBox::information(this,QString("错误"),QString("图像中没有线材"),QMessageBox::Yes);
+}
+void MainDialog::AutoClose()
+{
+    int mess;
+    mess = QMessageBox::warning(this,QString("退出"),QString("是否直接关机?"),QString("是"),QString("否(仅退出程序)"),QString("取消退出"));
+    //qDebug() << mess;
+    if (mess == 0 )
+    {
+    QProcess pro;    //通过QProcess类来执行第三方程序
+    QString cmd = QString("shutdown -s -t 0"); //shutdown -s -t 0 是window下的关机命令，
+
+    pro.start(cmd);    //执行命令cmd
+    pro.waitForStarted();
+    pro.waitForFinished();
+    }
+    else if (mess == 1 )
+    {qApp ->quit();}
+    else if (mess == 2 )
+    {return;}
 }
 //别的图像显示方式（没用到）
 

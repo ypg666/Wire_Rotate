@@ -79,7 +79,7 @@ void TIS_Camera::Camera(QWidget *win)
 //         pGrabber->setWindowSize(1280,960);
 
         //Grab1.setWindowSize(800,600);
-        Grab1.setWindowSize(1280,660);
+        Grab1.setWindowSize(1180,660);
 
         // Start the live video.
 //        long Width = Grab1.getAcqSizeMaxX();
@@ -135,7 +135,7 @@ void TIS_Camera::Trigger(QWidget *win)
         //Sets the size of the video window.
 //        pGrabber->setWindowSize(ui->widget->width(),ui->widget->height());
 //         pGrabber->setWindowSize(1280,960);
-        Grab1.setWindowSize(1280,660);
+        Grab1.setWindowSize(1180,660);
         // Start the live video.
         Grab1.startLive();
     }
@@ -143,11 +143,11 @@ void TIS_Camera::Trigger(QWidget *win)
 //相机初始化
 void TIS_Camera::CameraInit()
 {
-    if( !DShowLib::InitLibrary( "" ) )
-    {
+//    if( !DShowLib::InitLibrary( "" ) )
+//    {
 //		TRACE("The library could not be initialized. Invalid license key?");
 
-    }
+//    }
 
 //    Grab1 = new DShowLib::Grabber;
 
@@ -169,7 +169,8 @@ void TIS_Camera::CameraInit()
 //    {
 //        Grab1.stopLive();
 //    }
-    Grab1.showDevicePage();                                             //显示相机设备
+
+//    Grab1.showDevicePage();                                             //显示相机设备
     Grab1.saveDeviceStateToFile("device.xml");
     Grab1.loadDeviceStateFromFile("device.xml",true);
 //    Grab1.startLive();
