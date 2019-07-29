@@ -12,59 +12,6 @@ easyModbus2::~easyModbus2()
     serialPort.close();
 }
 
-int easyModbus2::initSerialPort2()
-{
-    this->hasMatchPort = false;
-    QStringList mPortNameList;  //串口列表
-    QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
-    if (!portList.empty()) {
-        foreach(const QSerialPortInfo &info, portList)
-        {
-            // qDebug() << "SerialPortList:";
-            mPortNameList.push_back(info.portName());
-            // qDebug() << "    SerialPortName:" << info.portName();
-        }
-
-        for(auto sPortName:mPortNameList){
-            this->serialPortName = sPortName;
-            serialPort.setPortName(serialPortName);
-            serialPort.setBaudRate(QSerialPort::Baud9600);           //设置波特率和读写方向
-            serialPort.setDataBits(QSerialPort::Data7);              //数据位为8位
-            serialPort.setFlowControl(QSerialPort::NoFlowControl);   //无流控制
-            serialPort.setParity(QSerialPort::EvenParity);           //无校验位
-            serialPort.setStopBits(QSerialPort::OneStop);            //一位停止位
-            if (serialPort.isOpen())                                 //如果串口已经打开了 先给他关闭了
-            {
-                serialPort.clear();
-                serialPort.close();
-            }
-
-            if (!serialPort.open(QIODevice::ReadWrite))              //用ReadWrite 的模式尝试打开串口
-            {
-                continue;
-            }
-            else
-            {
-                // ===== Matching Serial Port ======= //
-                sendMsg(this->matchMessageAA);
-                QByteArray receiveByte = readMsg();
-                QString receivedMsg = receiveByte.toHex();
-                if (receivedMsg == this->matchMessageAB)
-                {
-                    this->hasMatchPort = true;
-                    // qDebug() << QObject::tr("Successful Opening of Serial Port: %1").arg(this->serialPortName) << endl;
-                    return 1;
-                }
-            }
-        }
-    }
-    else
-    {
-        return -1;
-    }
-    return -1;
-}
-
 int easyModbus2::initSerialPort()
 {
     this->hasMatchPort = false;
@@ -81,10 +28,10 @@ int easyModbus2::initSerialPort()
         for(auto sPortName:mPortNameList){
             this->serialPortName = sPortName;
             serialPort.setPortName(serialPortName);
-            serialPort.setBaudRate(QSerialPort::Baud9600);           //设置波特率和读写方向
-            serialPort.setDataBits(QSerialPort::Data7);              //数据位为8位
+            serialPort.setBaudRate(QSerialPort::Baud38400);           //设置波特率和读写方向
+            serialPort.setDataBits(QSerialPort::Data8);              //数据位为8位
             serialPort.setFlowControl(QSerialPort::NoFlowControl);   //无流控制
-            serialPort.setParity(QSerialPort::EvenParity);           //无校验位
+            serialPort.setParity(QSerialPort::NoParity);           //无校验位
             serialPort.setStopBits(QSerialPort::OneStop);            //一位停止位
             if (serialPort.isOpen())                                 //如果串口已经打开了 先给他关闭了
             {
@@ -99,13 +46,14 @@ int easyModbus2::initSerialPort()
             else
             {
                 // ===== Matching Serial Port ======= //
-                sendMsg(this->matchMessageAA2);
+                this->matchMessageSend = QString::fromStdString(fxlib.getWriteMsg(this->numberOfRegister, 0));
+                sendMsg(this->matchMessageSend);
                 QByteArray receiveByte = readMsg();
                 QString receivedMsg = receiveByte.toHex();
-                if (receivedMsg.size() == 30)
+                if (receivedMsg == this->matchMessageRight)
                 {
                     this->hasMatchPort = true;
-                    // qDebug() << QObject::tr("Successful Opening of Serial Port: %1").arg(this->serialPortName) << endl;
+                    qDebug() << QObject::tr("Successful Opening of Serial Port: %1").arg(this->serialPortName) << endl;
                     return 1;
                 }
             }
@@ -117,7 +65,6 @@ int easyModbus2::initSerialPort()
     }
     return -1;
 }
-
 
 void easyModbus2::sendMsg(QString input)
 {
@@ -133,24 +80,6 @@ void easyModbus2::sendMsg(QString input)
         throw 100;
     }
 
-//    if (bytesWritten == -1)
-//    {
-//        qDebug() << QObject::tr("Failed to write the data to port %1 , error:%2").arg(serialPortName).arg(serialPort.errorString()) << endl;
-//    }
-//    else if (bytesWritten != writeData.size())
-//    {
-//        qDebug() << QObject::tr("Failed to write all the data to port %1 , error:%2").arg(serialPortName).arg(serialPort.errorString()) << endl;
-//    }
-//    else if (!serialPort.waitForBytesWritten(5000))
-//    {
-//        qDebug() << QObject::tr("Operation timed out or an error occurred for port %1 , error:%2").arg(serialPortName).arg(serialPort.errorString()) << endl;
-//    }
-//    else{
-//        //////////////////////显示发送的数据/////////////////////////////////////////////////
-//        qDebug() << QObject::tr("Data successfully sent to port %1").arg(serialPortName) << endl;
-//        //////////////////////显示接收的数据/////////////////////////////////////////////////
-//    }
-
 }
 
 void easyModbus2::sendMsg(int intInput)
@@ -160,24 +89,33 @@ void easyModbus2::sendMsg(int intInput)
         throw 100;
     }
 
-    QString input = QString::fromStdString(LRC::convertIntToModbusString(intInput, this->numberOfRegister));
-    sendMsg(input);
+    // 写两个寄存器 表示正负
+    QString input;
+    if(intInput < 0){
+        intInput = abs(intInput);
+        input = QString::fromStdString(fxlib.getWriteMsg(this->numberOfRegister, intInput));
 
+    }
+    else{
+        input = QString::fromStdString(fxlib.getWriteMsg(this->numberOfRegister + 2, intInput));
+    }
+    sendMsg(input);
+    // QString input = QString::fromStdString(LRC::convertIntToModbusString(intInput, this->numberOfRegister));
     // === test receive === //
     // ==== 一定要读一下才能保证写入，具体原因不详
-    if(true){
-        QByteArray receiveByte = readMsg();
-//        for(int i = 0; i < receiveByte.size();i++){
-//            std::cout << (receiveByte[i]);
-//        }
-    }
+//    if(true){
+//        QByteArray receiveByte = readMsg();
+////        for(int i = 0; i < receiveByte.size();i++){
+////            std::cout << (receiveByte[i]);
+////        }
+//    }
 
 }
 
 QByteArray easyModbus2::readMsg()
 {
 	QByteArray readData = serialPort.readAll();
-    while (serialPort.waitForReadyRead(200)){
+    while (serialPort.waitForReadyRead(1000)){
         readData.append(serialPort.readAll());
     }
 

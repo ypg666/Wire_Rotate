@@ -63,7 +63,8 @@ SOURCES += \
     adjustparameters.cpp \
     threeparams.cpp \
     paramsetting.cpp \
-    ClassThresholdTools.cpp
+    ClassThresholdTools.cpp \
+    FxPLC.cpp
 
 HEADERS += \
         maindialog.h \
@@ -153,7 +154,8 @@ HEADERS += \
     adjustparameters.h \
     threeparams.h \
     paramsetting.h \
-    ClassThresholdTools.h
+    ClassThresholdTools.h \
+    FxPlc.h
 
 FORMS += \
         maindialog.ui \
@@ -162,9 +164,10 @@ FORMS += \
     password.ui \
     sys.ui \
     debugMode.ui \
-    mainwindow.ui \
     adjustparameters.ui \
     threeparams.ui
+
+RC_ICONS = 1.ico
 
 #CONFIG += console
 
@@ -179,6 +182,7 @@ INCLUDEPATH += D:\OPENCV\opencv4.1\build\include\opencv2
 
 LIBS += $$quote(D:\QT\wire\Library\TIS_UDSHL11_x64.lib)
 LIBS += $$quote(D:\QT\wire\Library\TIS_UDSHL11d_x64.lib)
+#LIBS += $$quote(D:\QT\wire\Library\FxPlc.lib)
 
 win32: LIBS += -L$$PWD/Library/ -llibmodbus-5
 

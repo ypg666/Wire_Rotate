@@ -60,6 +60,7 @@ HistoryImage::HistoryImage(QWidget *parent) :
     //信号与槽函数
     connect(headerGoods, SIGNAL(sectionClicked(int)), ui->qTableWidget, SLOT(sortByColumn(int))); //用了qTableView的Public Functions作槽函数
     connect(ui->qTableWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onContextMenu(QPoint)));
+    connect(ui->qTableWidget, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(printAllSelect()));
     connect(ui->pushButton_3, SIGNAL(clicked(bool)), this, SLOT(close()));
     connect(ui->pushButton_4, SIGNAL(clicked(bool)), this, SLOT(prePageHis()));
     connect(ui->pushButton_5, SIGNAL(clicked(bool)), this, SLOT(nextPageHis()));
@@ -108,6 +109,7 @@ void HistoryImage::printAllSelect()
     QString filename;//const QString path=image_path;  //文件夹目录
     QImage *img =new QImage;
     QLabel *label =new QLabel();
+   //QDialog *widget = new QDialog();
     //tableItemList[2]->text()是空的时候 判断也会出错
     QList<QTableWidgetItem*> tableItemList = ui->qTableWidget->selectedItems();
 //    qDebug() << tableItemList.count();
@@ -118,7 +120,12 @@ void HistoryImage::printAllSelect()
             +QString::fromLocal8Bit("，角度：")+tableItemList[1]->text()
             +QString::fromLocal8Bit("，流程编号:")+tableItemList[2]->text());
     label->setPixmap(QPixmap::fromImage(*img));
+
+    label ->setWindowFlags(label->windowFlags() |Qt::Dialog);
+    label ->setWindowModality(Qt::ApplicationModal); //阻塞除当前窗体之外的所有的窗体
+
     label->show();
+    //widget->exec();
 }
 
 /***下一页***/

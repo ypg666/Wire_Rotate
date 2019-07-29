@@ -17,7 +17,6 @@
 #include "msvc_macro.h"
 #include "historyimage.h"
 #include "password.h"
-#include "cameradisplay.h"
 #include "debugMode.h"
 #include "TIS_Camera.h"
 #include "Listener1.h"//回调头文件

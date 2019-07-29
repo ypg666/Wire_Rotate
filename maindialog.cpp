@@ -38,9 +38,9 @@ MainDialog::MainDialog(QWidget *parent) :
 
     //左状态栏 右状态栏
     ui->label_8->setText("欢迎使用！");
-    ui->label_9->setText("爱博机器人   "
-                         "地址：XXXXXX   "
-                         "电话：XXXXXX   ");
+    ui->label_9->setText("中山爱博机器人有限公司   "
+                         "张生   "
+                         "电话：13610482491   ");
 
     //开机检测相机和串口
     detect_IO();
@@ -137,7 +137,10 @@ void MainDialog::fun()
 //显示函数  输入：l为旋转角度 与偏转角度相加 后modbus输出 并且在对应界面显示角度 并增加检测数量
 void MainDialog::show1(int l)
 {
-    int symbol = l / (abs(l));
+    int symbol;
+    if (l == 0){symbol = 1 ;}
+    else
+    {symbol = l / (abs(l));}
     temp = symbol * p.read_deflection();
 
     if (l+temp > 180 || l+temp < -180)
@@ -216,7 +219,7 @@ void MainDialog::grab1()
         if (threeparams.hasInputImg = true )
         {
             // threeparams.hasInputImg = false;
-            threeparams.show();
+            threeparams.exec();
         }
     }
     catch (const int errorcode)
@@ -250,7 +253,11 @@ void MainDialog::caculate1() //分步计算
 }
 void MainDialog::outcome1()     //分步输出
 {
-    int symbol = rotate / (abs(rotate));
+    int symbol;
+    if (rotate == 0)
+    {symbol = 1;}
+    else
+    {symbol = rotate / (abs(rotate));}
     temp = symbol * p.read_deflection();
 
     if (rotate+temp > 180 || rotate+temp < -180)
@@ -275,7 +282,10 @@ void MainDialog::outcome1()     //分步输出
 }
 void MainDialog::outcome2(int val)  //直接输出角度
 {
-    int symbol = val / (abs(val));
+    int symbol;
+    if (val == 0){symbol = 1;}
+    else
+    {symbol = val / (abs(val));}
     temp = symbol * p.read_deflection();
 
     if (val+temp > 180 || val+temp < -180)

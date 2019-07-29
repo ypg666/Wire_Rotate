@@ -170,7 +170,7 @@ void TIS_Camera::CameraInit()
 //        Grab1.stopLive();
 //    }
 
-//    Grab1.showDevicePage();                                             //显示相机设备
+    Grab1.showDevicePage();                                             //显示相机设备
     Grab1.saveDeviceStateToFile("device.xml");
     Grab1.loadDeviceStateFromFile("device.xml",true);
 //    Grab1.startLive();

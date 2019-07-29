@@ -47,7 +47,7 @@ void threeParams::on_pb_Yellow_clicked()
         emit sendCvMat(this->inputImg);
     }
 
-    wd_AP->show();
+    wd_AP->exec();
 }
 
 void threeParams::on_pb_Green_clicked()
@@ -70,7 +70,7 @@ void threeParams::on_pb_Green_clicked()
         emit sendCvMat(this->inputImg);
     }
 
-    wd_AP->show();
+    wd_AP->exec();
 }
 
 void threeParams::on_pb_Blue_clicked()
@@ -93,7 +93,7 @@ void threeParams::on_pb_Blue_clicked()
         emit sendCvMat(this->inputImg);
     }
 
-    wd_AP->show();
+    wd_AP->exec();
 }
 
 void threeParams::on_pb_Brown_clicked()
@@ -116,7 +116,7 @@ void threeParams::on_pb_Brown_clicked()
         emit sendCvMat(this->inputImg);
     }
 
-    wd_AP->show();
+    wd_AP->exec();
 }
 
 void threeParams::write_params(std::vector<std::vector<int>> &params1)
