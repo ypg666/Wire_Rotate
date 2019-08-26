@@ -46,8 +46,14 @@ MainDialog::MainDialog(QWidget *parent) :
     detect_IO();
     //调用开启相机自带的窗口
     cam.Camera(ui->widget);
-    detect_cam();
 
+    //黑色背景框
+    ui->widget->setAutoFillBackground(true);
+    QPalette qplte;
+    qplte.setColor(QPalette::Window, QColor(0,0,0));
+    ui->widget->setPalette(qplte);
+
+    detect_cam();
 
     if(easymodbus.initSerialPort() > 0)  //串口初始化
     {

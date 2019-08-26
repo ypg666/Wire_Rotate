@@ -1,6 +1,6 @@
 ﻿/*********************************************************************************
   *Copyright(C)
-  *ClassName:  threeParams
+  *ClassName:  FxLib
   *Author:  佳豪
   *Version: 1.0
   *Date:  2019.7.28
