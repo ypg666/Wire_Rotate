@@ -64,7 +64,9 @@ SOURCES += \
     threeparams.cpp \
     paramsetting.cpp \
     ClassThresholdTools.cpp \
-    FxPLC.cpp
+    FxPLC.cpp \
+    TIS_Camera2.cpp \
+    Listener2.cpp
 
 HEADERS += \
         maindialog.h \
@@ -155,7 +157,9 @@ HEADERS += \
     threeparams.h \
     paramsetting.h \
     ClassThresholdTools.h \
-    FxPlc.h
+    FxPlc.h \
+    TIS_Camera2.h \
+    Listener2.h
 
 FORMS += \
         maindialog.ui \

@@ -45,13 +45,19 @@ MainDialog::MainDialog(QWidget *parent) :
     //开机检测相机和串口
     detect_IO();
     //调用开启相机自带的窗口
-    cam.Camera(ui->widget);
+//    cam.Camera(ui->widget);
+    cam2.Camera(ui->widget_2);
 
     //黑色背景框
     ui->widget->setAutoFillBackground(true);
     QPalette qplte;
     qplte.setColor(QPalette::Window, QColor(0,0,0));
     ui->widget->setPalette(qplte);
+
+    //黑色背景框
+    ui->widget_2->setAutoFillBackground(true);
+    qplte.setColor(QPalette::Window, QColor(0,0,0));
+    ui->widget_2->setPalette(qplte);
 
     detect_cam();
 

@@ -19,7 +19,9 @@
 #include "password.h"
 #include "debugMode.h"
 #include "TIS_Camera.h"
+#include "TIS_Camera2.h"
 #include "Listener1.h"//回调头文件
+//#include "Listener2.h"
 #include "LineRotate.h"
 #include "easyModbus02.h"
 #include "sysdate.h"
@@ -50,6 +52,7 @@ public:
     debugMode w3; //调试窗口
     DShowLib::Grabber *pGrabber; //抓图
     TIS_Camera cam; //相机
+    TIS_Camera2 cam2; //相机2
     easyModbus2 easymodbus;
     LineRotate lineRotate; //算法
     SysDate p; //系统参数数据类
