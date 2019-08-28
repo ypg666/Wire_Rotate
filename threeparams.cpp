@@ -27,15 +27,15 @@ void threeParams::on_pb_Yellow_clicked()
     QString winTitle = QString::fromLocal8Bit("黄色通道参数调整");
     emit paramWinTitleChanged(winTitle);
 
-    std::vector<int> paramMin(10, 0);
-    std::vector<int> paramMax = {180, 180, 255, 255, 255, 255, 255, 255, 255, 255};
+    std::vector<int> paramMin(10, 0); //创10个0
+    std::vector<int> paramMax = {180, 180, 255, 255, 255, 255, 255, 255, 255, 255};//创建列表
 
     // === 从ini文件中，读取参数 === //
     std::vector<int> paramDefault = {120, 40, 0, 255, 25, 255, 0, 255, 0, 100};
     QString channelStr;
     channelStr.sprintf("Yellow");
     fileReader.readIni(channelStr, paramDefault);
-
+    //传参(图片变)
     emit paramMinChanged(paramMin);
     emit paramMaxChanged(paramMax);
     emit paramDefaultChanged(paramDefault);

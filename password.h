@@ -13,6 +13,7 @@
 #include "sysdate.h"
 #include "sys.h"
 #include "TIS_Camera.h"
+#include "TIS_Camera2.h"
 
 
 

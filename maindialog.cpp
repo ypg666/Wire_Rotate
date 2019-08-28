@@ -98,11 +98,20 @@ MainDialog::MainDialog(QWidget *parent) :
     connect(&w3, SIGNAL(outcome()), this, SLOT(outcome1()));
     connect(&w3, SIGNAL(out(int)), this, SLOT(outcome2(int)));
     connect(&w3, SIGNAL(deflection(int)), this, SLOT(set_deflection(int)));
+
+    connect(&w3_2, SIGNAL(grab_signal()), this, SLOT(grab2()));
+    connect(&w3_2, SIGNAL(caculate()), this, SLOT(caculate1()));
+    connect(&w3_2, SIGNAL(outcome()), this, SLOT(outcome1()));
+    connect(&w3_2, SIGNAL(out(int)), this, SLOT(outcome2(int)));
+    connect(&w3_2, SIGNAL(deflection(int)), this, SLOT(set_deflection(int)));
     //更新相机设置和算法计算后的信号槽
     connect(TIS_Camera::Instance(), SIGNAL(ini()), this, SLOT(normal()));
     connect(Listener1::Instance(), SIGNAL(finish(int)), this, SLOT(show1(int)));;
+    connect(TIS_Camera2::Instance(), SIGNAL(ini()), this, SLOT(normal2()));
+    connect(Listener2::Instance(), SIGNAL(finish(int)), this, SLOT(show2(int)));;
     //回调时算法报错的信号槽
     connect(Listener1::Instance(), SIGNAL(no_roi()), this, SLOT(ROI_error()));
+    connect(Listener2::Instance(), SIGNAL(no_roi()), this, SLOT(ROI_error()));
 }
 
 MainDialog::~MainDialog()
@@ -113,6 +122,10 @@ MainDialog::~MainDialog()
 void MainDialog::normal()
 {
     cam.Camera(ui->widget);
+}
+void MainDialog::normal2()
+{
+    cam2.Camera(ui->widget_2);
 }
 //开始检测 进入触发模式
 void MainDialog::fun()
@@ -190,6 +203,50 @@ void MainDialog::show1(int l)
     ui->label_6->setText(str1);
     this->update();
 }
+
+void MainDialog::show2(int l)
+{
+    int symbol;
+    if (l == 0){symbol = 1 ;}
+    else
+    {symbol = l / (abs(l));}
+    temp = symbol * p.read_deflection();
+
+    if (l+temp > 180 || l+temp < -180)
+    {
+        QMessageBox::warning(NULL,QString("错误"),QString("加入偏转角度后超出范围"),QMessageBox::Yes);
+        return;
+    }
+    try {
+        easymodbus.sendMsg(l+temp);
+    }
+    catch (const int errorcode)
+    {
+//        QMessageBox::warning(NULL,QString("错误"),QString("发送失败,正在检测串口"),QMessageBox::Yes);
+        if (easymodbus.initSerialPort() > 0)
+        {easymodbus.sendMsg(l+temp);}
+        else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
+    }
+    ui->lcdNumber_3->display(l+temp);
+    ui->lcdNumber_4->display(l1);
+    l1=l+temp;
+
+    QString str1=p.readhis();
+    int num2 = str1.toInt();  //历史检测数量
+    num1=QString::number(num);  //当前检测数量
+    if(num != 0)
+    {
+        num2++;
+        if(num2 == 10000)
+        {num2 = 0;}
+    }
+    num++;
+    str1=QString::number(num2);
+    p.sethis(str1);
+    ui->label_5->setText(num1);
+    ui->label_6->setText(str1);
+    this->update();
+}
 //历史图像界面
 void MainDialog::historyimage()
 {
@@ -199,7 +256,16 @@ void MainDialog::historyimage()
 //调试界面
 void MainDialog::debug()
 {
-    w3.exec();
+    int mess = QMessageBox::information(this,QString("选择相机"),QString("请选择调试相机"),QString("上相机"),QString("下相机"));
+    if (mess == 0 )
+    {
+        w3.exec();
+    }
+    else if (mess == 1 )
+    {
+        w3_2.exec();
+    }
+//    w3.exec();
 }
 //系统设置
 void MainDialog::password()
@@ -211,9 +277,19 @@ void MainDialog::password()
 //相机设置
 void MainDialog::password1()
 {
-    w2.setflag(1);
-    w2.exec();
+    int mess = QMessageBox::information(this,QString("选择相机"),QString("请选择调试相机"),QString("上相机"),QString("下相机"));
+    if (mess == 0 )
+    {
+        w2.setflag(1);
+        w2.exec();
+    }
+    else if (mess == 1 )
+    {
+        w2.setflag(2);
+        w2.exec();
+    }
 }
+
 //调试窗口抓图
 void MainDialog::grab1()
 {
@@ -222,6 +298,38 @@ void MainDialog::grab1()
     //grab_img = cv::imread("imaging.bmp");
     //直接传图会出错 ， 存图再读图不报错
     grab_img = cam.GetMatImage(); //不是线材图像的时候会BUG
+    cv::flip(grab_img, grab_img, 0);//垂直反转
+    cv::imwrite("grab_img.bmp", grab_img);
+    grab_img = cv::imread("grab_img.bmp");
+    threeparams.inputImg = grab_img;
+    //在这里catch不到
+    try {
+        if (threeparams.hasInputImg = true )
+        {
+            // threeparams.hasInputImg = false;
+            threeparams.exec();
+        }
+    }
+    catch (const int errorcode)
+    {
+        QMessageBox::warning(NULL,QString("错误"),QString("图像中无线材"),QMessageBox::Yes);
+    }
+
+//    cv::imshow("Test", grab_img);
+    cv::imwrite("test/grab_img.bmp", grab_img);
+}
+    else {
+        QMessageBox::warning(NULL,QString("错误"),QString("相机未连接"),QMessageBox::Yes);
+    }
+}
+
+void MainDialog::grab2()
+{
+    if(cam2.Valid())
+    {
+    //grab_img = cv::imread("imaging.bmp");
+    //直接传图会出错 ， 存图再读图不报错
+    grab_img = cam2.GetMatImage(); //不是线材图像的时候会BUG
     cv::flip(grab_img, grab_img, 0);//垂直反转
     cv::imwrite("grab_img.bmp", grab_img);
     grab_img = cv::imread("grab_img.bmp");
@@ -387,26 +495,3 @@ void MainDialog::AutoClose()
     else if (mess == 2 )
     {return;}
 }
-//别的图像显示方式（没用到）
-
-    //局部放大图片
-//1.       setMouseTracking（）; 打开鼠标移动跟踪
-//2.       局部放大图片的方法
-//void Widget::paintEvent(QPaintEvent *)
-//{
-//    QPainter painter(this);
-//    painter.drawPixmap(0,0,background);
-//    painter.drawPixmap(x+20,y+20,pixmap);
-//}
-//void Widget::mouseMoveEvent(QMouseEvent *event)
-//{
-//    x = event->x();
-//    y = event->y();
-//    //pixmap.fill(QColor(255,255,255,100));
-//    mypixmap = mypixmap.grabWidget(this,x,y,10,10);
-//    width = mypixmap.width();
-//    height = mypixmap.height();
-//    pixmap = mypixmap.scaled(width * 5,height * 5，Qt::KeepAspectRatio);         //适应横纵比
-
-//    update();
-//}

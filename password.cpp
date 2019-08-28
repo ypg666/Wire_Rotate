@@ -51,6 +51,14 @@ void Password::on_loginBtn_clicked()
 //        w4.Camerapropery();
         this->close();
     }
+    else if (ui->lineEdit->text() == q && flag ==2)
+    {
+        ui->lineEdit->clear();
+//        w4.CameraInit();
+        TIS_Camera2::Instance()->CameraInit();
+//        w4.Camerapropery();
+        this->close();
+    }
     else
     {
         QMessageBox::warning(this,QString::fromLocal8Bit("警告"),QString::fromLocal8Bit("用户名或密码错误！"),QMessageBox::Yes);

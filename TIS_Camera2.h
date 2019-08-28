@@ -29,7 +29,7 @@
 //#define AFX_TIS_CAMERA_H__9AE25ADE_A9E6_4DFD_A8E0_6181580BA1D4__INCLUDED_
 
 //#if _MSC_VER > 1000
-//#pragma once
+#pragma once
 //#endif // _MSC_VER > 1000
 
 

@@ -50,6 +50,7 @@ public:
     HistoryImage w1;  //历史图像窗口
     Password w2;    //密码窗口
     debugMode w3; //调试窗口
+    debugMode w3_2;
     DShowLib::Grabber *pGrabber; //抓图
     TIS_Camera cam; //相机
     TIS_Camera2 cam2; //相机2
@@ -59,8 +60,11 @@ public:
     threeParams threeparams;//算法调参
 public slots:
     void normal(); //实时显示图像
+    void normal2();
     void show1(int l);  //  算法处理完成后续主界面显示处理
+    void show2(int l);
     void grab1();   //调试窗口抓图
+    void grab2();
     void caculate1();   //调试窗口计算
     void outcome1();    //调试输出角度
     void outcome2(int val);  //直接输出角度

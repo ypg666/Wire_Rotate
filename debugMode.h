@@ -40,9 +40,11 @@ private:
 	int stateNumber = 0;
 
 signals:
+    //分步
     void grab_signal();
     void caculate();
     void outcome();
+    //直接
     void out(int);
     void deflection(int);
 

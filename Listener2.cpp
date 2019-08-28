@@ -45,33 +45,6 @@ void Listener2::frameReady(Grabber& caller, smart_ptr<MemBuffer> pBuffer, DWORD 
 
 
 	//pBuffer是数据指针头
-/*	    
-
-        CRect rect;
-		viewWnd->GetWindowRect(&rect);
-        CDC *dc=viewWnd->GetDC();
-		smart_ptr<BITMAPINFOHEADER> pInf = pBuffer->getBitmapInfoHeader();
-		SetStretchBltMode(dc->m_hDC , COLORONCOLOR);
- 			int nLines = StretchDIBits( 
-				dc->GetSafeHdc(),			// handle to the device context of the window
- 				0,
-				0,
- 				rect.Width(),
-				rect.Height(),
- 				0,						// x-coordinate of lower-left corner of the source rect
- 				0,						// y-coordinate of lower-left corner of the source rect
- 				abs(pInf->biWidth),
- 				abs(pInf->biHeight),
- 				pBuffer->getPtr(),	// modified address of array with DIB bits
- 				reinterpret_cast<LPBITMAPINFO>( &*pInf ),	// address of structure with bitmap info
- 				DIB_RGB_COLORS,				// RGB or palette indices
- 				SRCCOPY
- 				);
-
- 		ReleaseDC(viewWnd->m_hWnd,dc->GetSafeHdc());
- 	
-*/
-
 }
 
 void	Listener2::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
