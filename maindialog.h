@@ -21,11 +21,12 @@
 #include "TIS_Camera.h"
 #include "TIS_Camera2.h"
 #include "Listener1.h"//回调头文件
-//#include "Listener2.h"
+#include "Listener2.h"
 #include "LineRotate.h"
 #include "easyModbus02.h"
 #include "sysdate.h"
 #include "threeparams.h" //算法调参
+#include "threeparams2.h"
 #include <QDialog>
 #include <QTimer>
 #include <QTime>
@@ -50,14 +51,16 @@ public:
     HistoryImage w1;  //历史图像窗口
     Password w2;    //密码窗口
     debugMode w3; //调试窗口
-    debugMode w3_2;
+    debugMode w3_2; //调试窗口2
     DShowLib::Grabber *pGrabber; //抓图
     TIS_Camera cam; //相机
     TIS_Camera2 cam2; //相机2
     easyModbus2 easymodbus;
     LineRotate lineRotate; //算法
+    LineRotate2 lineRotate2; //算法2
     SysDate p; //系统参数数据类
     threeParams threeparams;//算法调参
+    threeParams2 threeparams2;//算法调参2
 public slots:
     void normal(); //实时显示图像
     void normal2();
@@ -66,6 +69,7 @@ public slots:
     void grab1();   //调试窗口抓图
     void grab2();
     void caculate1();   //调试窗口计算
+    void caculate2();   //调试窗口计算
     void outcome1();    //调试输出角度
     void outcome2(int val);  //直接输出角度
     void set_deflection(int val);  //设置偏转角度
@@ -84,6 +88,7 @@ private:
     int num=0;  //本次检测数量
     QString num1; //本次检测数量的显示值
     int l1;  //上次检测角度
+    int l2;  //上次检测角度2
     Mat grab_img; //抓图
     int rotate = 0; //调试时的检测角度
     int temp =0;//偏转角度临时计算
@@ -93,6 +98,7 @@ private:
 
     //算法初始参数
     std::vector<std::vector<int>> params;
+    std::vector<std::vector<int>> params2; //算法初始参数2
     //基地最优参数
 //    std::vector<int> blueThreshold{ 100, 120, 30, 255, 25, 255, 0, 255, 0, 255 };
 //    std::vector<int> greenThreshold{ 45, 100, 70, 255, 50, 255, 0, 255, 0, 255 };

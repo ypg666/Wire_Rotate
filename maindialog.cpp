@@ -54,7 +54,7 @@ MainDialog::MainDialog(QWidget *parent) :
     qplte.setColor(QPalette::Window, QColor(0,0,0));
     ui->widget->setPalette(qplte);
 
-    //黑色背景框
+    //黑色背景框2
     ui->widget_2->setAutoFillBackground(true);
     qplte.setColor(QPalette::Window, QColor(0,0,0));
     ui->widget_2->setPalette(qplte);
@@ -69,6 +69,8 @@ MainDialog::MainDialog(QWidget *parent) :
     //算法参数初始化
     threeparams.write_params(params);//读算法参数
     lineRotate.init(params);
+    threeparams2.write_params(params2);//读算法参数2
+    lineRotate2.init(params2);
 
     //设置晶体管控件QLCDNumber能显示的位数
     ui->lcdNumber_3->setDigitCount(8);
@@ -98,9 +100,9 @@ MainDialog::MainDialog(QWidget *parent) :
     connect(&w3, SIGNAL(outcome()), this, SLOT(outcome1()));
     connect(&w3, SIGNAL(out(int)), this, SLOT(outcome2(int)));
     connect(&w3, SIGNAL(deflection(int)), this, SLOT(set_deflection(int)));
-
+    //下相机
     connect(&w3_2, SIGNAL(grab_signal()), this, SLOT(grab2()));
-    connect(&w3_2, SIGNAL(caculate()), this, SLOT(caculate1()));
+    connect(&w3_2, SIGNAL(caculate()), this, SLOT(caculate2()));
     connect(&w3_2, SIGNAL(outcome()), this, SLOT(outcome1()));
     connect(&w3_2, SIGNAL(out(int)), this, SLOT(outcome2(int)));
     connect(&w3_2, SIGNAL(deflection(int)), this, SLOT(set_deflection(int)));
@@ -141,6 +143,7 @@ void MainDialog::fun()
         //ui->pushButton_9->setEnabled(false);
         ui->pushButton->setText(QString("停止检测"));
         cam.Trigger(ui->widget);
+        cam2.Trigger(ui->widget_2);
         ui->label_8->setText("正在运行,等待触发");
         this->update();
     }
@@ -154,6 +157,7 @@ void MainDialog::fun()
         //ui->pushButton_10->setEnabled(true);
         ui->pushButton->setText(QString("开始运行"));
         cam.Camera(ui->widget);
+        cam2.Camera(ui->widget_2);
         ui->label_8->setText("未开始运行");
         this->update();
     }
@@ -228,8 +232,8 @@ void MainDialog::show2(int l)
         else {QMessageBox::warning(NULL,QString("错误"),QString("串口未连接"),QMessageBox::Yes);}
     }
     ui->lcdNumber_3->display(l+temp);
-    ui->lcdNumber_4->display(l1);
-    l1=l+temp;
+    ui->lcdNumber_4->display(l2);
+    l2=l+temp;
 
     QString str1=p.readhis();
     int num2 = str1.toInt();  //历史检测数量
@@ -333,13 +337,13 @@ void MainDialog::grab2()
     cv::flip(grab_img, grab_img, 0);//垂直反转
     cv::imwrite("grab_img.bmp", grab_img);
     grab_img = cv::imread("grab_img.bmp");
-    threeparams.inputImg = grab_img;
+    threeparams2.inputImg = grab_img;
     //在这里catch不到
     try {
-        if (threeparams.hasInputImg = true )
+        if (threeparams2.hasInputImg = true )
         {
             // threeparams.hasInputImg = false;
-            threeparams.exec();
+            threeparams2.exec();
         }
     }
     catch (const int errorcode)
@@ -370,6 +374,23 @@ void MainDialog::caculate1() //分步计算
     }
     //rotate = c.getRotate(grab_img);
     ui->lcdNumber_2->display(rotate);
+}
+void MainDialog::caculate2() //分步计算
+{
+    try {
+        //rotate = lineRotate.getRotate(testImage, true, "D:/lineDebug/");
+        rotate = lineRotate2.getRotate(grab_img);
+        //qDebug() << rotate;
+        //lineRotate.clearTempData(); // 这一句可加 可不加 有洁癖的话可以加一下确保每次检测完后回到初始值
+    }
+    catch (const int errorcode)
+    {
+        //mei you chuang kou yao yong NULL
+        QMessageBox::warning(NULL,QString("错误"),QString("图像中没有线材"),QMessageBox::Yes);
+        //std::cout << "ERROR CODE: "<< errorcode << std::endl;
+    }
+    //rotate = c.getRotate(grab_img);
+    ui->lcdNumber_3->display(rotate);
 }
 void MainDialog::outcome1()     //分步输出
 {

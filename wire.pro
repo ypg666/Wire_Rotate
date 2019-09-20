@@ -66,7 +66,12 @@ SOURCES += \
     ClassThresholdTools.cpp \
     FxPLC.cpp \
     TIS_Camera2.cpp \
-    Listener2.cpp
+    Listener2.cpp \
+    lineRotate2.cpp \
+    paramsetting2.cpp \
+    adjustparameters2.cpp \
+    paramsetting.cpp \
+    threeparams2.cpp
 
 HEADERS += \
         maindialog.h \
@@ -159,7 +164,13 @@ HEADERS += \
     ClassThresholdTools.h \
     FxPlc.h \
     TIS_Camera2.h \
-    Listener2.h
+    Listener2.h \
+    LineRotate2.h \
+    paramsetting2.h \
+    adjustparameters2.h \
+    paramsetting2.h \
+    paramsetting.h \
+    threeparams2.h
 
 FORMS += \
         maindialog.ui \
@@ -169,7 +180,9 @@ FORMS += \
     sys.ui \
     debugMode.ui \
     adjustparameters.ui \
-    threeparams.ui
+    threeparams.ui \
+    adjustparameters2.ui \
+    threeparams2.ui
 
 RC_ICONS = 1.ico
 

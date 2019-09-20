@@ -96,7 +96,7 @@ void	Listener2::saveImage( smart_ptr<MemBuffer> pBuffer, DWORD currFrame)
     std::cout << rotate << std::endl;
 
     QString qfilename = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    sprintf( filename, "/%i_%i.bmp", rotate,curnum );
+    sprintf( filename, "/Camara2/%i_%i.bmp", rotate,curnum );
     // /history
     // he bing zi fu chuan
     //zhuan huan ge shi

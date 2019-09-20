@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////
 #pragma once
 #include "tisudshl.h"
-#include "LineRotate.h"
+#include "LineRotate2.h"
 #include "sysdate.h"
 #include <QObject>
 #include <QWidget>
@@ -39,7 +39,7 @@ public:
         return _instance;
     }
 
-    LineRotate lineRotate;
+    LineRotate2 lineRotate;
     SysDate sysdate;
     int curnum;int picnum;
 public:

@@ -38,10 +38,10 @@ void TIS_Camera2::Camera(QWidget *win)
         Grab1.stopLive();
     }
 //    Grab1 = new DShowLib::Grabber;
-        if (!Grab1.loadDeviceStateFromFile("device.xml",true))
+        if (!Grab1.loadDeviceStateFromFile("device2.xml",true))
         {
             Grab1.showDevicePage(); //
-            Grab1.saveDeviceStateToFile("device.xml");
+            Grab1.saveDeviceStateToFile("device2.xml");
         }
 //    if (!Grab1.openDev(0x07914124))  //
 //    {
@@ -79,7 +79,7 @@ void TIS_Camera2::Camera(QWidget *win)
 //         pGrabber->setWindowSize(1280,960);
 
         //Grab1.setWindowSize(800,600);
-        Grab1.setWindowSize(1180,660);
+        Grab1.setWindowSize(1180,330);
 
         // Start the live video.
 //        long Width = Grab1.getAcqSizeMaxX();
@@ -94,10 +94,10 @@ void TIS_Camera2::Trigger(QWidget *win)
     {
         Grab1.stopLive();
     }
-    if (!Grab1.loadDeviceStateFromFile("device.xml",true))
+    if (!Grab1.loadDeviceStateFromFile("device2.xml",true))
     {
         Grab1.showDevicePage(); //
-        Grab1.saveDeviceStateToFile("device.xml");
+        Grab1.saveDeviceStateToFile("device2.xml");
     }
 //    Grab1 = new DShowLib::Grabber;
 //    if (!Grab1.openDev(0x07914124))  //
@@ -135,7 +135,7 @@ void TIS_Camera2::Trigger(QWidget *win)
         //Sets the size of the video window.
 //        pGrabber->setWindowSize(ui->widget->width(),ui->widget->height());
 //         pGrabber->setWindowSize(1280,960);
-        Grab1.setWindowSize(1180,660);
+        Grab1.setWindowSize(1180,330);
         // Start the live video.
         Grab1.startLive();
     }
